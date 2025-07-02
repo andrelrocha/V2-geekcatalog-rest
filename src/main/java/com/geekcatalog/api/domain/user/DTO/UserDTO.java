@@ -24,7 +24,7 @@ public record UserDTO(@Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "O 
                       @JsonFormat(pattern = "dd/MM/yyyy")
                       @DateTimeFormat(pattern = "dd/MM/yyyy")
                       LocalDate birthday,
-                      UUID countryId,
+                      String countryId,
                       @NotNull
                       @Size(max = 20, message = "O nome de usuário deve ter no máximo 20 caracteres")
                       String username,

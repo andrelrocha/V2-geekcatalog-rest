@@ -2,7 +2,7 @@ package com.geekcatalog.api.domain.utils.API.IGDB.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.country.DTO.CountryReturnDTO;
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
 import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
 import com.geekcatalog.api.service.CountryService;
 
@@ -21,7 +21,7 @@ public class StudioCountryMapperFromIGDB {
         var countryNames = extractCountryNames(studios);
         List<CountryReturnDTO> countries = countryService.getCountriesByName(countryNames);
         return countries.stream().collect(Collectors.toMap(
-                country -> normalizeString(country.name()),
+                country -> normalizeString(country.nameCommon()),
                 country -> country
         ));
     }

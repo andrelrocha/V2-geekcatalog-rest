@@ -1,8 +1,8 @@
 package com.geekcatalog.api.service;
 
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.geekcatalog.api.domain.country.DTO.CountryReturnDTO;
 
 import java.util.List;
 

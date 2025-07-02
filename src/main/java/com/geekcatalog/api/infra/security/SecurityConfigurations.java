@@ -35,6 +35,7 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/country/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/user/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/oauth/**").permitAll();
@@ -42,7 +43,6 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.GET, "/infra/verifyjwt/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/infra/download/apk").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/infra/ping").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/countries/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/utils/admin/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/view/admin/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/infra/admin/**").hasRole("ADMIN");

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.geekcatalog.api.service.CountryService;
 
 @RestController
-@RequestMapping("/countries")
+@RequestMapping("/country")
 @Tag(name = "Country Routes Mapped on Controller")
 public class CountryController {
     @Autowired
@@ -21,7 +21,7 @@ public class CountryController {
     @GetMapping("/all")
     public ResponseEntity getAllCountriesPageable (@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "240") int size,
-                                                   @RequestParam(defaultValue = "name") String sortField,
+                                                   @RequestParam(defaultValue = "nameCommon") String sortField,
                                                    @RequestParam(defaultValue = "asc") String sortOrder) {
         var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortField));
         var countriesPageable = countryService.getAllCountries(pageable);

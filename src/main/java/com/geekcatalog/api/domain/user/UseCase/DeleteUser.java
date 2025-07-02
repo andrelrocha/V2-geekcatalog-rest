@@ -7,8 +7,6 @@ import com.geekcatalog.api.domain.gameList.GameListRepository;
 import com.geekcatalog.api.domain.gameRating.GameRatingRepository;
 import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepository;
 import com.geekcatalog.api.domain.listsApp.ListAppRepository;
-import com.geekcatalog.api.domain.profilePic.ProfilePicRepository;
-import com.geekcatalog.api.domain.profilePic.useCase.DeleteProfilePic;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
@@ -20,10 +18,6 @@ public class DeleteUser {
     private UserRepository userRepository;
     @Autowired
     private GetUserByTokenJWT getUserByTokenJWT;
-    @Autowired
-    private ProfilePicRepository profilePicRepository;
-    @Autowired
-    private DeleteProfilePic deleteProfilePic;
     @Autowired
     private GameListRepository gameListRepository;
     @Autowired
@@ -42,7 +36,6 @@ public class DeleteUser {
 
         transactionTemplate.execute(status -> {
             try {
-                var profilePicToDelete = profilePicRepository.findProfilePicByUserId(user.getId());
                 var gameListsToDelete = gameListRepository.findAllByUserId(user.getId());
                 var gameRatingsToDelete = gameRatingRepository.findAllByUserId(user.getId());
                 var listsPermissionUserToDelete = listPermissionUserRepository.findAllByUserId(user.getId());
@@ -63,9 +56,6 @@ public class DeleteUser {
                 }
                 if (!listsAppToDelete.isEmpty()) {
                     listAppRepository.deleteAll(listsAppToDelete);
-                }
-                if (profilePicToDelete != null) {
-                    deleteProfilePic.deleteProfilePic(user.getId());
                 }
 
                 userRepository.delete(user);
