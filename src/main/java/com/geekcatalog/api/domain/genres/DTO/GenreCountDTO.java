@@ -1,0 +1,6 @@
+package com.geekcatalog.api.domain.genres.DTO;
+
+import java.util.UUID;
+
+public record GenreCountDTO(UUID genreId, String genreName, int count) {
+}

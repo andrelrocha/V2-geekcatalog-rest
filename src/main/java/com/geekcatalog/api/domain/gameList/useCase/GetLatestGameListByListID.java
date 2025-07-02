@@ -1,0 +1,24 @@
+package com.geekcatalog.api.domain.gameList.useCase;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+import com.geekcatalog.api.domain.gameList.DTO.GameListReturnDTO;
+import com.geekcatalog.api.domain.gameList.GameListRepository;
+
+import java.util.UUID;
+
+@Component
+public class GetLatestGameListByListID {
+    @Autowired
+    private GameListRepository gameListRepository;
+
+    public Page<GameListReturnDTO> getLatestGamesByListID(Pageable pageable, String listId) {
+        UUID listIdUUID = UUID.fromString(listId);
+
+        var gameListPageable = gameListRepository.findAllGameListByListIdOrderByLatest(listIdUUID, pageable).map(GameListReturnDTO::new);
+
+        return gameListPageable;
+    }
+}

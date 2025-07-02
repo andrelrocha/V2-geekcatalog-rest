@@ -1,0 +1,42 @@
+package com.geekcatalog.api.domain.gameList.useCase;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import com.geekcatalog.api.domain.gameList.DTO.DeleteGameListDTO;
+import com.geekcatalog.api.domain.gameList.GameListRepository;
+import com.geekcatalog.api.domain.listsApp.ListApp;
+import com.geekcatalog.api.domain.listsApp.ListAppRepository;
+import com.geekcatalog.api.domain.permission.PermissionEnum;
+import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.gameList.strategy.PermissionValidationFactory;
+import com.geekcatalog.api.infra.exceptions.ValidationException;
+
+import java.util.UUID;
+
+@Component
+public class DeleteGameList {
+    @Autowired
+    private GameListRepository gameListRepository;
+    @Autowired
+    private GetUserByTokenJWT getUserByTokenJWT;
+    @Autowired
+    private ListAppRepository listAppRepository;
+    @Autowired
+    private PermissionValidationFactory permissionValidationFactory;
+
+    public void deleteGameList(DeleteGameListDTO data) {
+        UUID gameListId = UUID.fromString(data.gameListId());
+        var gameList = gameListRepository.findById(gameListId)
+                .orElseThrow(() -> new ValidationException("No game in a list was found for the provided ID."));
+
+        ListApp list = listAppRepository.findById(gameList.getList().getId())
+                .orElseThrow(() -> new ValidationException("No list was found for the provided ID."));
+
+        var user = getUserByTokenJWT.getUserByID(data.tokenJWT());
+
+        var validationStrategy = permissionValidationFactory.getStrategy(user, list, PermissionEnum.DELETE_GAME);
+        validationStrategy.validate(user, list);
+
+        gameListRepository.deleteById(gameList.getId());
+    }
+}

@@ -1,0 +1,18 @@
+package com.geekcatalog.api.domain.user.DTO;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+
+public record UserGetInfoUpdateDTO(String name,
+                                   String username,
+                                   Boolean twoFactorEnabled,
+                                   Boolean refreshTokenEnabled,
+                                   String phone,
+                                   @JsonFormat(pattern = "dd/MM/yyyy")
+                                    @DateTimeFormat(pattern = "dd/MM/yyyy")
+                                    LocalDate birthday,
+                                   String countryId,
+                                   String theme) {
+}
