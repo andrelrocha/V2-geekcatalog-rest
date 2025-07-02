@@ -1,9 +1,9 @@
 package com.geekcatalog.api.domain.country.useCase;
 
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.domain.country.DTO.CountryReturnDTO;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class GetCountriesByName {
         var countries = countryRepository.findAllByNamesIgnoreCaseAndTrimmed(namesNormalized);
 
         return countries.stream()
-                .map(country -> new CountryReturnDTO(country.getId(), country.getName(), country.getCode()))
+                .map(CountryReturnDTO::new)
                 .toList();
     }
 }

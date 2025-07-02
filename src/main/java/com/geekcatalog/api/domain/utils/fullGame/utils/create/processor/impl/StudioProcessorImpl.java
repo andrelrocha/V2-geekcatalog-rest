@@ -1,10 +1,10 @@
 package com.geekcatalog.api.domain.utils.fullGame.utils.create.processor.impl;
 
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.geekcatalog.api.domain.country.DTO.CountryReturnDTO;
 import com.geekcatalog.api.domain.gameStudio.DTO.GameStudioDTO;
 import com.geekcatalog.api.domain.studios.DTO.StudioDTO;
 import com.geekcatalog.api.domain.studios.DTO.StudioReturnDTO;

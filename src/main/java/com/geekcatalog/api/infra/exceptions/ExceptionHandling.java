@@ -1,5 +1,6 @@
 package com.geekcatalog.api.infra.exceptions;
 
+import com.geekcatalog.api.dto.utils.ApiResponseDTO;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,107 +26,116 @@ import java.util.List;
 public class ExceptionHandling {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity handleEntityNotFoundException() {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponseDTO<?>> handleEntityNotFoundException() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponseDTO.failure("EntityNotFoundException", "Resource not found."));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ApiResponseDTO<?>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponseDTO.failure("IllegalArgumentException", ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponseDTO<?>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> {
-                    String field = error.getField();
-                    String message = error.getDefaultMessage();
-                    return String.format("Field '%s': %s", field, message);
-                })
+                .map(error -> String.format("Field '%s': %s", error.getField(), error.getDefaultMessage()))
                 .toList();
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest()
+                .body(ApiResponseDTO.failure("MethodArgumentNotValidException", String.join("; ", errors)));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        if (ex.getCause() instanceof InvalidFormatException) {
-            var invalidFormatException = (InvalidFormatException) ex.getCause();
+    public ResponseEntity<ApiResponseDTO<?>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        if (ex.getCause() instanceof InvalidFormatException invalidFormatException) {
             if (invalidFormatException.getTargetType().equals(java.time.LocalDate.class)) {
-                return ResponseEntity.badRequest().body("Date format is wrong. Use YYYY-MM-DD.");
+                return ResponseEntity.badRequest()
+                        .body(ApiResponseDTO.failure("InvalidDateFormat", "Date format is wrong. Use YYYY-MM-DD."));
             }
         }
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ApiResponseDTO.failure("HttpMessageNotReadableException", ex.getMessage()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity handleBadCredentialsException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
+    public ResponseEntity<ApiResponseDTO<?>> handleBadCredentialsException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponseDTO.failure("BadCredentialsException", "Invalid credentials."));
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity handleAuthenticationException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error while authenticating user");
+    public ResponseEntity<ApiResponseDTO<?>> handleAuthenticationException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponseDTO.failure("AuthenticationException", "Error while authenticating user."));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity handleAccessDeniedException() {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
+    public ResponseEntity<ApiResponseDTO<?>> handleAccessDeniedException() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponseDTO.failure("AccessDeniedException", "Access denied."));
     }
 
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity handleLockedException() {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account locked.");
+    public ResponseEntity<ApiResponseDTO<?>> handleLockedException() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponseDTO.failure("LockedException", "Account locked."));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+    public ResponseEntity<ApiResponseDTO<?>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         Throwable rootCause = ex.getRootCause();
-        if (rootCause instanceof SQLException) {
-            SQLException sqlEx = (SQLException) rootCause;
+        if (rootCause instanceof SQLException sqlEx) {
             String sqlState = sqlEx.getSQLState();
             String errorMessage = sqlEx.getMessage();
 
-            if (sqlState != null && sqlState.equals("23505")) {  // Código para violação de restrição de unicidade no PostgreSQL
-                if (errorMessage.contains("users_social_number_key")) {
-                    return ResponseEntity.badRequest().body("Data integrity violation error. Duplicate primary key for the Social Number field.");
-                } else if (errorMessage.contains("users_login_key")) {
-                    return ResponseEntity.badRequest().body("Data integrity violation error. Duplicate primary key for the login field.");
+            if ("23505".equals(sqlState)) {
+                if (errorMessage.contains("user_email_key")) {
+                    return ResponseEntity.badRequest()
+                            .body(ApiResponseDTO.failure("UniqueConstraintViolation", "Duplicate email."));
                 } else if (errorMessage.contains("users_username_key")) {
-                    return ResponseEntity.badRequest().body("Data integrity violation error. Duplicate primary key for the username field.");
+                    return ResponseEntity.badRequest()
+                            .body(ApiResponseDTO.failure("UniqueConstraintViolation", "Duplicate username."));
                 }
             }
         }
 
-        return ResponseEntity.badRequest().body("Data integrity violation error.");
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleRuntimeException(RuntimeException ex) {
-        return ResponseEntity.status(500).body("Internal Server Error: " + ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(ApiResponseDTO.failure("DataIntegrityViolationException", "Data integrity violation."));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-        return ResponseEntity.badRequest().body("Maximum upload size exceeded, please send a smaller file.");
+    public ResponseEntity<ApiResponseDTO<?>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponseDTO.failure("MaxUploadSizeExceededException", "Maximum upload size exceeded, please send a smaller file."));
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public ResponseEntity handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect login or password.");
+    public ResponseEntity<ApiResponseDTO<?>> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponseDTO.failure("InternalAuthenticationServiceException", "Incorrect login or password."));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<String> handleValidationException(ValidationException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ApiResponseDTO<?>> handleValidationException(ValidationException ex) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponseDTO.failure("ValidationException", ex.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiResponseDTO<?>> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponseDTO.failure("RuntimeException", "Internal Server Error: " + ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getLocalizedMessage());
+    public ResponseEntity<ApiResponseDTO<?>> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponseDTO.failure("Exception", "Error: " + ex.getLocalizedMessage()));
     }
 
     private record DataValidationError(String field, String message) {

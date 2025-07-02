@@ -18,6 +18,6 @@ public class GetPublicInfo {
         var user = repository.findById(userIdUUID)
                 .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
 
-        return new UserPublicReturnDTO(user.getName(), user.getBirthday(), user.getCountry().getName(), user.getCountry().getId());
+        return new UserPublicReturnDTO(user.getName(), user.getBirthday(), user.getCountry().getNameCommon(), user.getCountry().getId());
     }
 }

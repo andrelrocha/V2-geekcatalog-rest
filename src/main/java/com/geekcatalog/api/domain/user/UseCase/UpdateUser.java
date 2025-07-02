@@ -39,9 +39,7 @@ public class UpdateUser {
 
         Country country = null;
         if (dto.countryId() != null) {
-            var countryUuid = UUID.fromString(dto.countryId());
-
-            country = countryRepository.findById(countryUuid)
+            country = countryRepository.findById(dto.countryId())
                     .orElseThrow(() -> new ValidationException("No country was found fot the informed ID, during user update."));
         }
 

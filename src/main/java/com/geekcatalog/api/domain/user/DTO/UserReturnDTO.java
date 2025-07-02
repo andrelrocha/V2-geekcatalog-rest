@@ -21,7 +21,7 @@ public record UserReturnDTO(String id,
 
     public UserReturnDTO(User user) {
         this(user.getId().toString(), user.getLogin(), user.getUsername(), user.getName(), user.getCpf(), user.getPhone(),
-                user.getBirthday(), String.valueOf(user.getTheme()), user.getCountry().getName(), user.getCountry().getId().toString(),
+                user.getBirthday(), String.valueOf(user.getTheme()), user.getCountry().getNameCommon(), user.getCountry().getId(),
                 user.isTwoFactorEnabled(), user.isRefreshTokenEnabled(), user.getRole());
     }
 }

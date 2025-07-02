@@ -1,10 +1,10 @@
 package com.geekcatalog.api.domain.utils.fullGame.utils.create.processor;
 
-import com.geekcatalog.api.domain.country.DTO.CountryReturnDTO;
 import com.geekcatalog.api.domain.studios.DTO.StudioDTO;
 import com.geekcatalog.api.domain.studios.DTO.StudioReturnDTO;
 import com.geekcatalog.api.domain.studios.DTO.StudioReturnFullGameInfo;
 import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
 
 import java.util.List;
 import java.util.Map;

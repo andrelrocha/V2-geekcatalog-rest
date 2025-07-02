@@ -2,8 +2,6 @@ package com.geekcatalog.api.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.geekcatalog.api.domain.utils.API.IGDB.DTO.IGDBQueryRequestDTO;
-import com.geekcatalog.api.domain.utils.API.OpenAI.DTO.GameNameDTO;
 import com.geekcatalog.api.domain.utils.API.Twitch.TwitchAuth;
 import com.geekcatalog.api.domain.utils.fullGame.DTO.CreateFullGameDTO;
-import com.geekcatalog.api.service.ChatGPTService;
 import com.geekcatalog.api.service.IGDBService;
 import com.geekcatalog.api.service.SpreadsheetService;
 
@@ -24,8 +20,6 @@ import java.io.IOException;
 @RequestMapping("/utils")
 @Tag(name = "Utils Routes Mapped on Controller")
 public class UtilsController {
-    @Autowired
-    private ChatGPTService chatGPTService;
     @Autowired
     private SpreadsheetService spreadsheetService;
     @Autowired
@@ -77,27 +71,4 @@ public class UtilsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/download/apk")
-    public ResponseEntity<Resource> downloadApk() throws IOException {
-        var resource = new ClassPathResource("files/geekcatalog-v.1.0.2.apk");
-
-        if (!resource.exists()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        var headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=geekcatalog-v.1.0.2.apk");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(resource);
-    }
-
-
-    //falta ajeitar aqui para ser um GET e formatar criando o DTO
-    @PostMapping("/admin/chatgpt/gameinfo")
-    public ResponseEntity getGameInfoFromGPT(@RequestBody GameNameDTO dto) {
-        var response = chatGPTService.getGameInfo(dto);
-        return ResponseEntity.ok(response);
-    }
 }

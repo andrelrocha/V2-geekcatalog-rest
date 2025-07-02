@@ -21,7 +21,7 @@ public interface StudioRepository extends JpaRepository<Studio, UUID> {
         FROM Studio s
         WHERE s.name = :name AND s.country.id = :countryId
         """)
-    boolean existsByNameAndCountry(String name, UUID countryId);
+    boolean existsByNameAndCountry(String name, String countryId);
 
     @Query("""
         SELECT NEW com.geekcatalog.api.domain.studios.DTO.StudioReturnFullGameInfo(gs.studio.id, gs.studio.name)

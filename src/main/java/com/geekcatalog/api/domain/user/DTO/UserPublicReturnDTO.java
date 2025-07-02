@@ -7,6 +7,6 @@ public record UserPublicReturnDTO(
                                   String name,
                                   LocalDate birthday,
                                   String countryName,
-                                  UUID countryId) {
+                                  String countryId) {
 
 }
