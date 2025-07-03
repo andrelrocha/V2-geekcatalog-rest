@@ -21,10 +21,10 @@ public class GetRatingByGameAndUserJWT {
 
         var user = getUserByTokenJWT.getUserByID(data.tokenJWT());
 
-        var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, UUID.fromString(user.id()));
+        var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, user.id());
 
         if (gameRating == null) {
-            return new GameRatingReturnDTO(gameIdUUID, UUID.fromString(user.id()), user.name(), 0);
+            return new GameRatingReturnDTO(gameIdUUID, user.id(), user.name(), 0);
         }
 
         return new GameRatingReturnDTO(gameRating);

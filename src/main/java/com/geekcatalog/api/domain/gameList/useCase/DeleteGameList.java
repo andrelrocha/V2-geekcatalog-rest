@@ -25,6 +25,7 @@ public class DeleteGameList {
     private PermissionValidationFactory permissionValidationFactory;
 
     public void deleteGameList(DeleteGameListDTO data) {
+        /*
         UUID gameListId = UUID.fromString(data.gameListId());
         var gameList = gameListRepository.findById(gameListId)
                 .orElseThrow(() -> new ValidationException("No game in a list was found for the provided ID."));
@@ -38,5 +39,7 @@ public class DeleteGameList {
         validationStrategy.validate(user, list);
 
         gameListRepository.deleteById(gameList.getId());
+
+         */
     }
 }

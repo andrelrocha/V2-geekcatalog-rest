@@ -1,9 +1,11 @@
 package com.geekcatalog.api.domain.user;
 
+import com.geekcatalog.api.domain.role.Role;
 import com.geekcatalog.api.domain.user.DTO.*;
+import com.geekcatalog.api.domain.userRole.UserRole;
+import com.geekcatalog.api.dto.user.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +13,10 @@ import com.geekcatalog.api.domain.country.Country;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
-@Table(name = "users")
+@Table(name = "app_user")
 @Entity(name = "User")
 @Getter
 @Setter
@@ -25,37 +26,36 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
-    private UUID id;
+    @Column(name = "id", nullable = false, length = 36, updatable = false)
+    private String id;
 
-    @Column(name = "login", unique = true)
-    private String login;
+    @Column(name = "email", unique = true, nullable = false, length = 100)
+    private String email;
 
-    private String password;
-    @Column(name = "username", unique = true, length = 20)
+    @Column(name = "username", unique = true, nullable = false, length = 20)
     private String username;
 
-    private String name;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(name = "cpf", length = 14, unique = true)
-    private String cpf;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
     @Column(name = "phone", length = 14)
     private String phone;
-    @Column
+
+    @Column(name = "birthday")
     private LocalDate birthday;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @Column(name = "token_expiration")
+    private LocalDateTime tokenExpiration;
 
-    @Enumerated(EnumType.STRING)
-    private UserTheme theme;
+    @Column(name = "token_mail")
+    private String tokenMail;
 
     @Column(name = "access_failed_count")
     private int accessFailedCount = 0;
@@ -66,18 +66,18 @@ public class User implements UserDetails {
     @Column(name = "lockout_end")
     private LocalDateTime lockoutEnd;
 
-    @Column(name = "refresh_token_enabled")
-    private boolean refreshTokenEnabled = false;
-
     @Column(name = "two_factor_enabled")
     private boolean twoFactorEnabled = false;
 
-    @Column(name = "token_mail")
-    private String tokenMail;
+    @Column(name = "refresh_token_enabled")
+    private boolean refreshTokenEnabled = false;
 
-    @Column(name = "token_expiration")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime tokenExpiration;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "theme", length = 20)
+    private UserTheme theme;
+
+    @Column(name = "profile_pic_url", length = 255)
+    private String profilePicUrl;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -85,27 +85,43 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public User(UserCreateDTO dto) {
-        this.login = dto.data().login();
-        this.password = dto.data().password();
-        this.name = dto.data().name();
-        this.username = dto.data().username();
-        this.cpf = dto.data().cpf();
-        this.phone = dto.data().phone();
-        this.birthday = dto.data().birthday();
-        this.country = dto.country();
-        this.twoFactorEnabled = dto.data().twoFactorEnabled();
-        this.refreshTokenEnabled = dto.data().refreshTokenEnabled();
-        this.theme = UserTheme.valueOf(dto.data().theme());
-        this.role = UserRole.USER;
+    //aqui deve mapear o nome da coluna em userRole
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<UserRole> userRoles = new ArrayList<>();
+
+    public User(UserDTO dto, Country country) {
+        this.email = dto.email();
+        this.password = dto.password();
+        this.name = dto.name();
+        this.username = dto.username();
+        this.phone = dto.phone();
+        this.birthday = dto.birthday();
+        this.country = country;
+        this.twoFactorEnabled = Boolean.TRUE.equals(dto.twoFactorEnabled());
+        this.refreshTokenEnabled = Boolean.TRUE.equals(dto.refreshTokenEnabled());
+        this.theme = dto.theme() != null ? UserTheme.valueOf(dto.theme()) : null;
+    }
+
+    public List<String> getRoles() {
+        return userRoles.stream()
+                .map(UserRole::getRole)
+                .filter(Objects::nonNull)
+                .map(Role::getName)
+                .distinct()
+                .toList();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == UserRole.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("ROLE_USER"));
+        Set<GrantedAuthority> authorities = getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                .collect(Collectors.toSet());
+
+        if (authorities.stream().noneMatch(auth -> auth.getAuthority().equals("ROLE_USER"))) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return authorities;
     }
 
     @Override
@@ -137,13 +153,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return !lockoutEnabled;
     }
-
-    public void setPassword(String encodedPassword) {
-        this.password = encodedPassword;
-    }
-
-    public void setAdmin() { this.role = UserRole.ADMIN; }
-
 
     public void forgotPassword(UserForgotDTO data) {
         this.tokenMail = data.tokenMail();
@@ -193,8 +202,8 @@ public class User implements UserDetails {
 
     @PrePersist
     protected void onCreate() {
+        this.id = UUID.randomUUID().toString().toUpperCase();
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
@@ -207,8 +216,4 @@ public class User implements UserDetails {
     }
 
     public void updateBirthday(LocalDate date) { this.birthday = date; }
-
-    public void setTokenExpiration(LocalDateTime time) {
-        this.tokenExpiration = time;
-    }
 }

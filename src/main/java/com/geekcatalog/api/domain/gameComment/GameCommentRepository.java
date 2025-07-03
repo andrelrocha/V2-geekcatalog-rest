@@ -14,7 +14,7 @@ public interface GameCommentRepository extends JpaRepository<GameComment, UUID> 
             FROM GameComment gc
             WHERE gc.comment = :comment AND gc.user.id = :userId AND gc.game.id = :gameId
             """)
-    boolean gameCommentExists(UUID userId, UUID gameId, String comment);
+    boolean gameCommentExists(String userId, UUID gameId, String comment);
 
     @Query("""
             SELECT new com.geekcatalog.api.domain.gameComment.DTO.GameCommentJOINReturnDTO(

@@ -30,9 +30,9 @@ public class TokenService {
 
             String token = JWT.create()
                     .withIssuer("geekcatalog-api")
-                    .withSubject(user.getLogin())
+                    .withSubject(user.getEmail())
                     .withClaim("id", user.getId().toString())
-                    .withClaim("role", user.getRole().toString())
+                    .withClaim("role", user.getRoles().toString())
                     .withClaim("theme", user.getTheme().toString())
                     .withIssuedAt(Instant.now())
                     .withExpiresAt(dateExpires())
@@ -49,8 +49,8 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(refreshSecret);
             return JWT.create()
                     .withIssuer("geekcatalog-api")
-                    .withSubject(user.getLogin())
-                    .withClaim("id", user.getId().toString())
+                    .withSubject(user.getEmail())
+                    .withClaim("id", user.getId())
                     .withClaim("refreshId", UUID.randomUUID().toString())
                     .withIssuedAt(Instant.now())
                     .withExpiresAt(refreshTokenExpirationDate())
@@ -123,6 +123,7 @@ public class TokenService {
     }
 
     private Instant refreshTokenExpirationDate() {
+        //se alterar aqui tem que levar em consideração o expiration date do cookie http em cookieManager
         return LocalDateTime.now().plusDays(15).toInstant(ZoneOffset.of("-03:00"));
     }
 }

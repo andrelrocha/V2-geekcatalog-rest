@@ -25,12 +25,10 @@ public class GetListWithReadPermissionPageable {
     private ListPermissionUserRepository listPermissionUserRepository;
 
     public Page<ListAppReturnDTO> getAllListsWithReadPermission(String userId, Pageable pageable) {
-        var userIdUUID = UUID.fromString(userId);
-
         try {
             var readEnum = (PermissionEnum.READ).toString();
             var readPermission = permissionRepository.findByPermissionName(readEnum);
-            var listsPermissionWithReadPermissionToUser = listPermissionUserRepository.findAllByParticipantIdAndPermissionId(userIdUUID, readPermission.getId());
+            var listsPermissionWithReadPermissionToUser = listPermissionUserRepository.findAllByParticipantIdAndPermissionId(userId, readPermission.getId());
             List<UUID> listsAppID = new ArrayList<>();
             for (ListPermissionUser listPermission : listsPermissionWithReadPermissionToUser) {
                 listsAppID.add(listPermission.getList().getId());

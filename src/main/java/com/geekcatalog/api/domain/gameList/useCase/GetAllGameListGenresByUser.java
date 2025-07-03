@@ -25,7 +25,7 @@ public class GetAllGameListGenresByUser {
     public Page<GenreCountDTO> getAllGameListGenresByUserId(String tokenJWT, Pageable pageable) {
         var user = getUserIdByJWT.getUserByJWT(tokenJWT);
 
-        var gameListsByUser = gameListRepository.findAllByUserId(UUID.fromString(user.userId()));
+        var gameListsByUser = gameListRepository.findAllByUserId(user.userId());
 
         var pageableGenres = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted());
 

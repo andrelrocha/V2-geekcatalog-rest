@@ -15,10 +15,6 @@ public class GetListPublicPageable {
     private ListAppRepository repository;
 
     public Page<ListAppReturnDTO> getAllPublicListsByUserId(String userId, Pageable pageable) {
-        var userIdUUID = UUID.fromString(userId);
-
-        var pageablePublicListsByUserId = repository.findAllListsPublicByUserId(pageable, userIdUUID).map(ListAppReturnDTO::new);
-
-        return pageablePublicListsByUserId;
+        return repository.findAllListsPublicByUserId(pageable, userId).map(ListAppReturnDTO::new);
     }
 }

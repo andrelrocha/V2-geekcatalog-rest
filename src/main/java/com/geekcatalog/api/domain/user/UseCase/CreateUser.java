@@ -2,13 +2,12 @@ package com.geekcatalog.api.domain.user.UseCase;
 
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.domain.user.DTO.UserCreateDTO;
-import com.geekcatalog.api.domain.user.DTO.UserDTO;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
+import com.geekcatalog.api.dto.user.UserDTO;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 import java.time.LocalDate;
@@ -24,7 +23,8 @@ public class CreateUser {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserReturnDTO createUser(UserDTO data) {
-        boolean userExists = userRepository.userExistsByLogin(data.login());
+        /*
+        boolean userExists = userRepository.userExistsByLogin(data.email());
 
         if (userExists) {
             throw new ValidationException("Email on user creation already exists in our database");
@@ -60,5 +60,9 @@ public class CreateUser {
         var userOnDb = userRepository.save(newUser);
 
         return new UserReturnDTO(userOnDb);
+
+         */
+
+        return null;
     }
 }

@@ -23,19 +23,18 @@ public class UpdateList {
 
     public ListAppReturnDTO updateListApp(ListAppDTO data, String listId) {
         var listIdUUID = UUID.fromString(listId);
-        var userIdUUID = UUID.fromString(data.userId());
 
         var listApp = repository.findById(listIdUUID)
                 .orElseThrow(() -> new ValidationException("No list was found with the provided ID during the update process."));
 
         var errorMessagePermission = "The user attempting to edit the list is neither the owner nor has the required permission for this operation.";
 
-        if (!listApp.getUser().getId().equals(userIdUUID)) {
-            var listsPermission = listPermissionUserRepository.findAllByParticipantIdAndListId(userIdUUID, listApp.getId());
+        if (!listApp.getUser().getId().equals(data.userId())) {
+            var listsPermission = listPermissionUserRepository.findAllByParticipantIdAndListId(data.userId(), listApp.getId());
             if (!listsPermission.isEmpty()) {
                 var updatedEnum = PermissionEnum.UPDATE;
                 var permission = getPermissionByNameENUM.getPermissionByNameOnENUM(updatedEnum);
-                var userPermissionList = listPermissionUserRepository.findByParticipantIdAndListIdAndPermissionId(userIdUUID, listApp.getId(), permission.id());
+                var userPermissionList = listPermissionUserRepository.findByParticipantIdAndListIdAndPermissionId(data.userId(), listApp.getId(), permission.id());
 
                 if (userPermissionList == null) {
                     throw new ValidationException(errorMessagePermission);

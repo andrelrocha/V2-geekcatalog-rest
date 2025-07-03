@@ -24,9 +24,7 @@ public class GetAverageRatingByUserJWT {
             throw new ValidationException("No user was found for the provided ID.");
         }
 
-        var userIdUUID = UUID.fromString(user.id());
-
-        var allRatings = gameRatingRepository.findAllByUserId(userIdUUID);
+        var allRatings = gameRatingRepository.findAllByUserId(user.id());
 
         int sum = 0;
 

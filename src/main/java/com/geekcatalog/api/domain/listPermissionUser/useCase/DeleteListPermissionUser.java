@@ -24,7 +24,7 @@ public class DeleteListPermissionUser {
     private UserRepository userRepository;
 
     public void deleteListPermission(ListPermissionUserDTO data) {
-        var participantInvited = userRepository.findByLoginToHandle(data.participantLogin());
+        var participantInvited = userRepository.findByEmailToHandle(data.participantEmail());
         if (participantInvited == null) {
             throw new ValidationException("No user was found with the provided login as a participant in the process of adding (deleting) permissions for a user on a list.");
         }
@@ -36,7 +36,7 @@ public class DeleteListPermissionUser {
             var readEnum = PermissionEnum.READ.toString();
             var permissionRead = permissionRepository.findByPermissionName(readEnum);
             if (permissionRead.getId().equals(permissionIdUUID)) {
-                var deleteDTO = new DeleteListPermissionUserDTO(data.listId(), participantInvited.getLogin(), data.ownerId());
+                var deleteDTO = new DeleteListPermissionUserDTO(data.listId(), participantInvited.getEmail(), data.ownerId());
                 deleteAllListPermissionUser.deleteAllListPermission(deleteDTO);
                 return;
             }
@@ -44,8 +44,7 @@ public class DeleteListPermissionUser {
             throw new RuntimeException("Something went wrong in the permission reading process during the delete listPermission use case.");
         }
 
-        var ownerIdUUID = UUID.fromString(data.ownerId());
-        var owner = userRepository.findById(ownerIdUUID)
+        var owner = userRepository.findById(data.ownerId())
                 .orElseThrow(() -> new ValidationException("No user was found with the provided ID as the owner in the delete list permission process."));
 
         var listPermissionUser = repository.findByParticipantIdAndListIdAndPermissionId(participantInvited.getId(), listIdUUID, permissionIdUUID);

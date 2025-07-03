@@ -14,7 +14,7 @@ public interface ListPermissionUserRepository extends JpaRepository<ListPermissi
             AND lpu.list.id = :listId
             AND lpu.permission.id = :permissionId
             """)
-    boolean existsByParticipantIdAndListIdAndPermissionId(UUID participantId, UUID listId, UUID permissionId);
+    boolean existsByParticipantIdAndListIdAndPermissionId(String participantId, UUID listId, UUID permissionId);
 
     @Query("""
             SELECT lpu
@@ -23,7 +23,7 @@ public interface ListPermissionUserRepository extends JpaRepository<ListPermissi
             AND lpu.list.id = :listId
             AND lpu.permission.id = :permissionId
             """)
-    ListPermissionUser findByParticipantIdAndListIdAndPermissionId(UUID participantId, UUID listId, UUID permissionId);
+    ListPermissionUser findByParticipantIdAndListIdAndPermissionId(String participantId, UUID listId, UUID permissionId);
 
     @Query("""
             SELECT lpu
@@ -31,7 +31,7 @@ public interface ListPermissionUserRepository extends JpaRepository<ListPermissi
             WHERE lpu.participant.id = :participantId
             AND lpu.list.id = :listId
             """)
-    List<ListPermissionUser> findAllByParticipantIdAndListId(UUID participantId, UUID listId);
+    List<ListPermissionUser> findAllByParticipantIdAndListId(String participantId, UUID listId);
 
     @Query("""
             SELECT lpu
@@ -39,7 +39,7 @@ public interface ListPermissionUserRepository extends JpaRepository<ListPermissi
             WHERE lpu.participant.id = :participantId
             AND lpu.permission.id = :permissionId
             """)
-    List<ListPermissionUser> findAllByParticipantIdAndPermissionId(UUID participantId, UUID permissionId);
+    List<ListPermissionUser> findAllByParticipantIdAndPermissionId(String participantId, UUID permissionId);
 
     @Query("SELECT lpu FROM ListPermissionUser lpu WHERE lpu.list.id = :listId")
     List<ListPermissionUser> findAllByListId(UUID listId);
@@ -49,5 +49,5 @@ public interface ListPermissionUserRepository extends JpaRepository<ListPermissi
             WHERE lpu.participant.id = :userId
             OR lpu.owner.id = :userId
            """)
-    List<ListPermissionUser> findAllByUserId(UUID userId);
+    List<ListPermissionUser> findAllByUserId(String userId);
 }

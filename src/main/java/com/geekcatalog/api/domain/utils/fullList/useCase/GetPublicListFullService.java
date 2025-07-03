@@ -26,9 +26,7 @@ public class GetPublicListFullService {
     private GetImageGameByGameID getImageGameByGameID;
 
     public Page<FullListReturnDTO> getPublicListsByUserId(String userId, Pageable pageable) {
-        var userIdUUID = UUID.fromString(userId);
-
-        var pageableListsByUserId = repository.findAllListsPublicByUserId(pageable, userIdUUID).map(list -> {
+        var pageableListsByUserId = repository.findAllListsPublicByUserId(pageable, userId).map(list -> {
            var listIdString = (list.getId()).toString();
             var gameCount = countGameListByListID.countGamesByListID(listIdString);
 

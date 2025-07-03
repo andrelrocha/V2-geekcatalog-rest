@@ -1,8 +1,9 @@
 package com.geekcatalog.api.domain.gameList.strategy;
 
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.listsApp.ListApp;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
+
 
 @Component
 public class OwnerPermissionValidation implements PermissionValidationStrategy {

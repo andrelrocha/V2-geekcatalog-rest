@@ -37,7 +37,7 @@ public class GameListEntityExtractorServiceImpl implements GameListEntityExtract
 
     @Override
     public User extractUser(String userId) {
-        return userRepository.findById(UUID.fromString(userId))
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new ValidationException("No user was found with the provided id."));
     }
 

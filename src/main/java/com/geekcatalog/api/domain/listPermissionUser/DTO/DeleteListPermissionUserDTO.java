@@ -1,4 +1,4 @@
 package com.geekcatalog.api.domain.listPermissionUser.DTO;
 
-public record DeleteListPermissionUserDTO(String listId, String participantLogin, String tokenJwt) {
+public record DeleteListPermissionUserDTO(String listId, String participantEmail, String tokenJwt) {
 }

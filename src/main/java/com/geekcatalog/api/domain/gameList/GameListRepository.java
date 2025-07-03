@@ -48,5 +48,5 @@ public interface GameListRepository extends JpaRepository<GameList, UUID>, GameL
             SELECT g FROM GameList g
             WHERE g.user.id = :userId
             """)
-    List<GameList> findAllByUserId(UUID userId);
+    List<GameList> findAllByUserId(String userId);
 }

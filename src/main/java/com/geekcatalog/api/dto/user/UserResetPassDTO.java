@@ -1,10 +1,10 @@
-package com.geekcatalog.api.domain.user.DTO;
+package com.geekcatalog.api.dto.user;
 
 import jakarta.validation.constraints.NotNull;
 
 public record UserResetPassDTO(
         @NotNull
-        String login,
+        String email,
         @NotNull
         String password,
         @NotNull

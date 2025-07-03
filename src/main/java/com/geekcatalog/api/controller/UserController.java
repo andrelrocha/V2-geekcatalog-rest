@@ -1,6 +1,10 @@
 package com.geekcatalog.api.controller;
 
 import com.geekcatalog.api.domain.user.DTO.*;
+import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.dto.user.UserOnlyEmailDTO;
+import com.geekcatalog.api.dto.user.UserResetPassDTO;
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,7 +55,7 @@ public class UserController {
 
     @PostMapping("/forgot_password")
     @Transactional
-    public ResponseEntity<String> forgotPassword(@RequestBody UserOnlyLoginDTO data) {
+    public ResponseEntity<String> forgotPassword(@RequestBody UserOnlyEmailDTO data) {
         var stringReturn = userService.forgotPassword(data);
         return ResponseEntity.ok(stringReturn);
     }
