@@ -3,56 +3,34 @@ package com.geekcatalog.api.domain.user.UseCase;
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
+import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.service.EntityHandlerService;
+import com.geekcatalog.api.infra.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.dto.user.UserDTO;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class CreateUser {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CountryRepository countryRepository;
+    private EntityHandlerService entityHandlerService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserReturnDTO createUser(UserDTO data) {
-        /*
-        boolean userExists = userRepository.userExistsByLogin(data.email());
-
-        if (userExists) {
+    public UserReturnDTO signUp(UserDTO data) {
+        boolean userExistsByEmail = userRepository.userExistsByEmail(data.email());
+        boolean userExistsByUsername = userRepository.userExistsByUsername(data.username());
+        if (userExistsByEmail) {
             throw new ValidationException("Email on user creation already exists in our database");
+        } else if(userExistsByUsername) {
+            throw new ValidationException("Username on user creation already exists in our database");
         }
 
-        var country = countryRepository.findById(data.countryId())
-                .orElseThrow(() -> new ValidationException("No country was found fot the informed ID, during sign up."));
+        var country = entityHandlerService.getCountryById(data.countryId());
 
-        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        var formattedBirthday = LocalDate.parse(data.birthday().format(formatter));
-
-        var updatedData = new UserDTO(
-                data.login(),
-                data.password(),
-                data.name(),
-                data.cpf(),
-                data.phone(),
-                formattedBirthday,
-                data.countryId(),
-                data.username(),
-                data.twoFactorEnabled(),
-                data.refreshTokenEnabled(),
-                data.theme()
-        );
-
-        var createDTO = new UserCreateDTO(updatedData, country);
-
-        var newUser = new User(createDTO);
+        var newUser = new User(data, country);
 
         String encodedPassword = bCryptPasswordEncoder.encode(data.password());
         newUser.setPassword(encodedPassword);
@@ -60,9 +38,5 @@ public class CreateUser {
         var userOnDb = userRepository.save(newUser);
 
         return new UserReturnDTO(userOnDb);
-
-         */
-
-        return null;
     }
 }

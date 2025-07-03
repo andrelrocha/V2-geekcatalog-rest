@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserReturnDTO createUser(UserDTO data) {
-        var user = createUser.createUser(data);
+        var user = createUser.signUp(data);
         return user;
     }
 

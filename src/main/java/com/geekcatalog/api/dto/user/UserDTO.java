@@ -36,8 +36,8 @@ public record UserDTO(
         )
         String phone,
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        @DateTimeFormat(pattern = "dd/MM/yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate birthday,
 
         String countryId,
