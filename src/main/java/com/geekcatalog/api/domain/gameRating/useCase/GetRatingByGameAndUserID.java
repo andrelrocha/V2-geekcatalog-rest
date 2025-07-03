@@ -15,12 +15,11 @@ public class GetRatingByGameAndUserID {
 
     public GameRatingReturnDTO getRatingByGameAndUser(GameRatingByGameAndUserDTO data) {
         var gameIdUUID = UUID.fromString(data.gameId());
-        var userIdUUID = UUID.fromString(data.userId());
 
-        var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, userIdUUID);
+        var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, data.userId());
 
         if (gameRating == null) {
-            return new GameRatingReturnDTO(gameIdUUID, userIdUUID, "", 0);
+            return new GameRatingReturnDTO(gameIdUUID, data.userId(), "", 0);
         }
 
         return new GameRatingReturnDTO(gameRating);

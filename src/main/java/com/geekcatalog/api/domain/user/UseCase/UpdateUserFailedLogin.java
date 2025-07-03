@@ -27,10 +27,13 @@ public class UpdateUserFailedLogin {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateFailedLogin(String login) {
-        User user = userRepository.findByLoginToHandle(login);
+        User user = userRepository.findByEmailToHandle(login);
 
         if (user == null) {
-            throw new ValidationException("No user was found for the provided login: " + login);
+            user = userRepository.findByUsernameToHandle(login);
+            if (user == null) {
+                throw new ValidationException("No user was found for the provided login: " + login);
+            }
         }
 
         int failedAttempts = user.getAccessFailedCount() + 1;
@@ -39,7 +42,8 @@ public class UpdateUserFailedLogin {
             var lockoutEndTime = LocalDateTime.now().plusMinutes(15);
             user.setLockoutEnabled(true);
             user.setLockoutEnd(lockoutEndTime);
-            taskScheduler.schedule(() -> unlockUserAccount(user),
+            final User lockedUser = user;
+            taskScheduler.schedule(() -> unlockUserAccount(lockedUser),
                     lockoutEndTime.atZone(ZoneId.systemDefault()).toInstant());
         } else {
             user.setAccessFailedCount(failedAttempts);

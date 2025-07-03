@@ -31,7 +31,7 @@ public class AddGameComment {
             throw new RuntimeException("User not found during the process of adding a game comment.");
         }
 
-        var userEntity = userRepository.findByIdToHandle(UUID.fromString(user.userId()));
+        var userEntity = userRepository.findByIdToHandle(user.userId());
 
         var commentExists = gameCommentRepository.gameCommentExists(userEntity.getId(), UUID.fromString(data.gameId()), data.comment());
 

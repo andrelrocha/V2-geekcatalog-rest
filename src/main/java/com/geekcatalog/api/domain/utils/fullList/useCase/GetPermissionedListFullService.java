@@ -34,12 +34,10 @@ public class GetPermissionedListFullService {
     private ListPermissionUserRepository listPermissionUserRepository;
 
     public Page<FullListReturnDTO> getPermissionedListsByUserId(String userId, Pageable pageable) {
-        var userIdUUID = UUID.fromString(userId);
-
         try {
             var readEnum = (PermissionEnum.READ).toString();
             var readPermission = permissionRepository.findByPermissionName(readEnum);
-            var listsPermissionWithReadPermissionToUser = listPermissionUserRepository.findAllByParticipantIdAndPermissionId(userIdUUID, readPermission.getId());
+            var listsPermissionWithReadPermissionToUser = listPermissionUserRepository.findAllByParticipantIdAndPermissionId(userId, readPermission.getId());
             var listsAppID = new ArrayList<UUID>();
             for (ListPermissionUser listPermission : listsPermissionWithReadPermissionToUser) {
                 listsAppID.add(listPermission.getList().getId());

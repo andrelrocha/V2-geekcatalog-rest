@@ -1,8 +1,8 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.infra.security.TokenService;
@@ -20,10 +20,8 @@ public class GetUserByTokenJWT {
         var userId = tokenService.getIdClaim(tokenJWT);
         userId = userId.replaceAll("\"", "");
 
-        var uuid = UUID.fromString(userId);
-
-        var user = repository.findById(uuid)
-                .orElseThrow(() -> new ValidationException("No user was foud for the provided ID."));
+        var user = repository.findById(userId)
+                .orElseThrow(() -> new ValidationException("No user was found for the provided ID."));
 
         return new UserReturnDTO(user);
     }

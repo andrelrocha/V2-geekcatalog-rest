@@ -31,7 +31,7 @@ public class DeleteUser {
 
     public void deleteUser(String tokenJWT) {
         var userDTO = getUserByTokenJWT.getUserByID(tokenJWT);
-        var user = userRepository.findById(UUID.fromString(userDTO.id()))
+        var user = userRepository.findById(userDTO.id())
                 .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
 
         transactionTemplate.execute(status -> {

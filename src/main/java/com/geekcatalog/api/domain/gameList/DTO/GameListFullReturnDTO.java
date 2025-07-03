@@ -4,7 +4,7 @@ import com.geekcatalog.api.domain.gameList.GameList;
 
 import java.util.UUID;
 
-public record GameListFullReturnDTO(UUID id, UUID userId, UUID gameId, String gameName, UUID listId, UUID consoleId, String consoleName, String note, int rating) {
+public record GameListFullReturnDTO(UUID id, String userId, UUID gameId, String gameName, UUID listId, UUID consoleId, String consoleName, String note, int rating) {
     public GameListFullReturnDTO(GameList gameList, int rating) {
         this(
                 gameList.getId(),

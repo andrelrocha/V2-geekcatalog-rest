@@ -20,7 +20,7 @@ public class DeleteAllListPermissionUser {
     private GetUserByTokenJWT getUserByTokenJWT;
 
     public void deleteAllListPermission(DeleteListPermissionUserDTO data) {
-        var participantInvited = userRepository.findByLoginToHandle(data.participantLogin());
+        var participantInvited = userRepository.findByEmailToHandle(data.participantEmail());
         if (participantInvited == null) {
             throw new ValidationException("No user was found with the provided login as a participant in the process of adding permissions for a user on a list.");
         }
@@ -28,8 +28,8 @@ public class DeleteAllListPermissionUser {
         var listIdUUID = UUID.fromString(data.listId());
 
         var user = getUserByTokenJWT.getUserByID(data.tokenJwt());
-        var ownerIdUUID = UUID.fromString(user.id());
-        var owner = userRepository.findById(ownerIdUUID)
+        var ownerId = user.id();
+        var owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> new ValidationException("No user was found with the provided ID as the owner in the delete list permission process."));
 
         var listPermissionUser = repository.findAllByListId(listIdUUID);

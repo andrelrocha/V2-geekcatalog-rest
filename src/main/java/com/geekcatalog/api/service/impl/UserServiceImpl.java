@@ -2,6 +2,10 @@ package com.geekcatalog.api.service.impl;
 
 import com.geekcatalog.api.domain.user.DTO.*;
 import com.geekcatalog.api.domain.user.UseCase.*;
+import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.dto.user.UserOnlyEmailDTO;
+import com.geekcatalog.api.dto.user.UserResetPassDTO;
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String forgotPassword(UserOnlyLoginDTO data) {
+    public String forgotPassword(UserOnlyEmailDTO data) {
         forgotPassword.forgotPassword(data);
         return "Email sent with accessToken for password reset";
     }

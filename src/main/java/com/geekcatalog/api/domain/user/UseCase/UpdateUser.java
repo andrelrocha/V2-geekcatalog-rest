@@ -1,10 +1,10 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.country.Country;
 import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
 import com.geekcatalog.api.domain.user.DTO.UserGetInfoUpdateDTO;
 import com.geekcatalog.api.domain.user.DTO.UserUpdateDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
@@ -29,9 +29,7 @@ public class UpdateUser {
         var userId = tokenService.getIdClaim(tokenJWT);
         userId = userId.replaceAll("\"", "");
 
-        var uuid = UUID.fromString(userId);
-
-        var user = repository.findByIdToHandle(uuid);
+        var user = repository.findByIdToHandle(userId);
 
         if (user == null) {
             throw new ValidationException("No User was found for the provided ID.");

@@ -13,11 +13,11 @@ public class AuthenticateService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //caso inicial passando o login
-        UserDetails userDetails = userRepository.findByLogin(username);
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        //caso inicial passando o email
+        UserDetails userDetails = userRepository.findByEmail(login);
         if (userDetails == null) {
-            userDetails = userRepository.findByUsername(username);
+            userDetails = userRepository.findByUsername(login);
         }
         return userDetails;
     }

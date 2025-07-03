@@ -14,13 +14,13 @@ public interface GameRatingRepository extends JpaRepository<GameRating, UUID> {
             FROM GameRating gr 
             WHERE gr.game.id = :gameId AND gr.user.id = :userId
            """)
-    boolean existsByGameIdAndUserId(UUID gameId, UUID userId);
+    boolean existsByGameIdAndUserId(UUID gameId, String userId);
 
     @Query("""
             SELECT gr FROM GameRating gr 
             WHERE gr.game.id = :gameId AND gr.user.id = :userId
             """)
-    GameRating findByGameIdAndUserId(UUID gameId, UUID userId);
+    GameRating findByGameIdAndUserId(UUID gameId, String userId);
 
     @Query("""
                 SELECT gr FROM GameRating gr
@@ -32,5 +32,5 @@ public interface GameRatingRepository extends JpaRepository<GameRating, UUID> {
                 SELECT gr FROM GameRating gr
                 WHERE gr.user.id = :userId
             """)
-    List<GameRating> findAllByUserId(UUID userId);
+    List<GameRating> findAllByUserId(String userId);
 }

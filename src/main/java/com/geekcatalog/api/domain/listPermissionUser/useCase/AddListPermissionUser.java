@@ -32,17 +32,16 @@ public class AddListPermissionUser {
     private TransactionTemplate transactionTemplate;
 
     public ListPermissionUserReturnDTO addPermissionToUserOnList(ListPermissionUserDTO data) {
-        if (data.participantLogin() == null || data.ownerId() == null || data.listId() == null || data.permissionId() == null) {
+        if (data.participantEmail() == null || data.ownerId() == null || data.listId() == null || data.permissionId() == null) {
             throw new ValidationException("All fields are required in the process of adding permissions for a user on a list.");
         }
 
-        var participantInvited = userRepository.findByLoginToHandle(data.participantLogin());
+        var participantInvited = userRepository.findByEmailToHandle(data.participantEmail());
         if (participantInvited == null) {
             throw new ValidationException("No user was found with the provided login as a participant in the process of adding permissions for a user on a list.");
         }
 
-        var ownerIdUUID = UUID.fromString(data.ownerId());
-        var ownerList = userRepository.findById(ownerIdUUID)
+        var ownerList = userRepository.findById(data.ownerId())
                 .orElseThrow(() -> new ValidationException("No user was found with the provided ID as the owner in the process of adding permissions for a user on a list."));
 
         var listAppIdUUID = UUID.fromString(data.listId());

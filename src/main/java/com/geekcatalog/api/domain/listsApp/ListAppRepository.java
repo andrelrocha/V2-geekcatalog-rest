@@ -14,20 +14,20 @@ public interface ListAppRepository extends JpaRepository<ListApp, UUID> {
         FROM ListApp la 
         WHERE LOWER(TRIM(la.name)) = LOWER(TRIM(:name)) AND la.user.id = :userId
         """)
-    boolean existsByName(String name, UUID userId);
+    boolean existsByName(String name, String userId);
 
     @Query("""
             SELECT la FROM ListApp la
             WHERE la.user.id = :userId
             """)
-    Page<ListApp> findAllListsByUserId(Pageable pageable, UUID userId);
+    Page<ListApp> findAllListsByUserId(Pageable pageable, String userId);
 
     @Query("""
             SELECT la FROM ListApp la
             WHERE la.user.id = :userId
             AND la.visibility = true
             """)
-    Page<ListApp> findAllListsPublicByUserId(Pageable pageable, UUID userId);
+    Page<ListApp> findAllListsPublicByUserId(Pageable pageable, String userId);
 
 
     @Query("""
@@ -41,14 +41,14 @@ public interface ListAppRepository extends JpaRepository<ListApp, UUID> {
             WHERE la.user.id = :userId
             ORDER BY la.name ASC 
             """)
-    Page<ListApp> findAllListsByUserIDOrderedByName(Pageable pageable, UUID userId);
+    Page<ListApp> findAllListsByUserIDOrderedByName(Pageable pageable, String userId);
 
     @Query("""
         SELECT la FROM ListApp la
         WHERE la.user.id = :userId
         AND LOWER(la.name) LIKE LOWER(CONCAT('%', :nameCompare, '%'))
         """)
-    Page<ListApp> findListsByUserIdAndByNameContaining(String nameCompare, Pageable pageable, UUID userId);
+    Page<ListApp> findListsByUserIdAndByNameContaining(String nameCompare, Pageable pageable, String userId);
 
     @Query("""
         SELECT la FROM ListApp la
@@ -60,5 +60,5 @@ public interface ListAppRepository extends JpaRepository<ListApp, UUID> {
             SELECT la FROM ListApp la
             WHERE la.user.id = :userId
            """)
-    List<ListApp> findAllByUserId(UUID userId);
+    List<ListApp> findAllByUserId(String userId);
 }

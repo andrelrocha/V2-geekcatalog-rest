@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.domain.user.UserRepository;
-import com.geekcatalog.api.domain.user.DTO.UserResetPassDTO;
+import com.geekcatalog.api.dto.user.UserResetPassDTO;
 
 import java.time.LocalDateTime;
 
@@ -19,13 +19,13 @@ public class ResetPassword {
 
     public void resetPassword(UserResetPassDTO data) {
         try {
-            var userExists = repository.existsByLogin(data.login());
+            var userExists = repository.existsByEmail(data.email());
 
             if (!userExists) {
                 throw new ValidationException("No user was found for the provided login");
             }
 
-            var user = repository.findByLoginToHandle(data.login());
+            var user = repository.findByEmailToHandle(data.email());
             var tokenMail = user.getTokenMail();
             var tokenExpiration = user.getTokenExpiration();
             var now = LocalDateTime.now();
