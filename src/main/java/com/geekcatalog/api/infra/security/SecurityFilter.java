@@ -31,7 +31,6 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        /*
         String accessToken = getAccessToken(request);
         String refreshToken = getRefreshToken(request);
 
@@ -50,7 +49,6 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
         }
 
-         */
         filterChain.doFilter(request, response);
     }
 

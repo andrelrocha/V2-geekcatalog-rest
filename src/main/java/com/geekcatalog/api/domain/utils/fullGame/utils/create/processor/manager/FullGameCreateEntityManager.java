@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.game.DTO.GameDTO;
 import com.geekcatalog.api.domain.game.DTO.GameReturnDTO;
 import com.geekcatalog.api.domain.utils.fullGame.DTO.CreateFullGameDTO;
-import com.geekcatalog.api.service.GameService;
+import com.geekcatalog.api.service.old.GameService;
 
 import static com.geekcatalog.api.infra.utils.stringFormatter.StringFormatter.capitalizeEachWord;
 import static com.geekcatalog.api.infra.utils.stringFormatter.StringFormatter.normalizeString;

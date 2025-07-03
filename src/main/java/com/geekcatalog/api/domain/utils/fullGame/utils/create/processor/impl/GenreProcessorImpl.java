@@ -9,8 +9,8 @@ import com.geekcatalog.api.domain.genres.DTO.GenreDTO;
 import com.geekcatalog.api.domain.genres.DTO.GenreReturnDTO;
 import com.geekcatalog.api.domain.utils.API.IGDB.utils.GenreNameFormatterFromIGDB;
 import com.geekcatalog.api.domain.utils.fullGame.utils.create.processor.GenreProcessor;
-import com.geekcatalog.api.service.GameGenreService;
-import com.geekcatalog.api.service.GenreService;
+import com.geekcatalog.api.service.old.GameGenreService;
+import com.geekcatalog.api.service.old.GenreService;
 
 import java.util.ArrayList;
 import java.util.List;

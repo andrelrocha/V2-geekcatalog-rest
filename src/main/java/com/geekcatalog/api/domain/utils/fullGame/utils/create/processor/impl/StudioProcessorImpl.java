@@ -13,8 +13,8 @@ import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
 import com.geekcatalog.api.domain.utils.API.IGDB.utils.StudioCountryMapperFromIGDB;
 import com.geekcatalog.api.domain.utils.API.IGDB.utils.StudioDTOFormatterFromIGDB;
 import com.geekcatalog.api.domain.utils.fullGame.utils.create.processor.StudioProcessor;
-import com.geekcatalog.api.service.GameStudioService;
-import com.geekcatalog.api.service.StudioService;
+import com.geekcatalog.api.service.old.GameStudioService;
+import com.geekcatalog.api.service.old.StudioService;
 
 import java.util.List;
 import java.util.Map;

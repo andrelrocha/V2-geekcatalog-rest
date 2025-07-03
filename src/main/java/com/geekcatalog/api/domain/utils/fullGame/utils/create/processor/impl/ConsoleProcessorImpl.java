@@ -9,8 +9,8 @@ import com.geekcatalog.api.domain.consoles.DTO.ConsoleReturnDTO;
 import com.geekcatalog.api.domain.gameConsole.DTO.GameConsoleDTO;
 import com.geekcatalog.api.domain.utils.API.IGDB.utils.ConsoleNameFormatterFromIGDB;
 import com.geekcatalog.api.domain.utils.fullGame.utils.create.processor.ConsoleProcessor;
-import com.geekcatalog.api.service.ConsoleService;
-import com.geekcatalog.api.service.GameConsoleService;
+import com.geekcatalog.api.service.old.ConsoleService;
+import com.geekcatalog.api.service.old.GameConsoleService;
 
 import java.util.ArrayList;
 import java.util.List;

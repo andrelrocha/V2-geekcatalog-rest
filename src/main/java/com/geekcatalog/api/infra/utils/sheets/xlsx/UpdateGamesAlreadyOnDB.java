@@ -7,8 +7,8 @@ import com.geekcatalog.api.domain.consoles.ConsoleRepository;
 import com.geekcatalog.api.domain.gameList.DTO.GameListUpdateRequestDTO;
 import com.geekcatalog.api.domain.gameRating.DTO.GameRatingDTO;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
-import com.geekcatalog.api.service.GameListService;
-import com.geekcatalog.api.service.GameRatingService;
+import com.geekcatalog.api.service.old.GameListService;
+import com.geekcatalog.api.service.old.GameRatingService;
 
 import java.util.ArrayList;
 import java.util.List;

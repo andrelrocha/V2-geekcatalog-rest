@@ -1,0 +1,80 @@
+package com.geekcatalog.api.controller.old;
+
+import com.geekcatalog.api.domain.user.DTO.*;
+import com.geekcatalog.api.dto.user.*;
+import com.geekcatalog.api.dto.utils.AccessTokenDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.geekcatalog.api.infra.utils.httpCookies.CookieManager;
+import com.geekcatalog.api.service.old.UserService;
+
+@RestController
+@RequestMapping("/user")
+@Tag(name = "User Routes Mapped on Controller")
+public class UserController {
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CookieManager cookieManager;
+
+    @PostMapping("/create")
+    @Transactional
+    public ResponseEntity<UserReturnDTO> createUser(@RequestBody @Valid UserDTO data) {
+        var newUser = userService.createUser(data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+    @GetMapping("/bytokenjwt")
+    public ResponseEntity<UserReturnDTO> getUserByTokenJWT(@RequestHeader("Authorization") String authorizationHeader) {
+        var tokenJWT = authorizationHeader.substring(7);
+        var user = userService.getUserByTokenJWT(tokenJWT);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/forgot_password")
+    @Transactional
+    public ResponseEntity<String> forgotPassword(@RequestBody UserOnlyEmailDTO data) {
+        var stringReturn = userService.forgotPassword(data);
+        return ResponseEntity.ok(stringReturn);
+    }
+
+    @PostMapping("/reset_password")
+    @Transactional
+    public ResponseEntity<String> resetPassword(@RequestBody UserResetPassDTO data) {
+        var stringSuccess= userService.resetPassword(data);
+        return ResponseEntity.ok(stringSuccess);
+    }
+
+    @GetMapping("/getuserid/{tokenJwt}")
+    public ResponseEntity<UserIdDTO> getUserId(@PathVariable String tokenJwt) {
+        var userId = userService.getUserIdByJWT(tokenJwt);
+        return ResponseEntity.ok(userId);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<UserReturnDTO> updateUser(@RequestHeader("Authorization") String authorizationHeader, @RequestBody UserGetInfoUpdateDTO data) {
+        var tokenJWT = authorizationHeader.substring(7);
+        var updatedUser = userService.updateUserInfo(data, tokenJWT);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity deleteUser(@RequestHeader("Authorization") String authorizationHeader) {
+        var tokenJWT = authorizationHeader.substring(7);
+        userService.deleteUser(tokenJWT);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/public/{userId}")
+    public ResponseEntity<UserPublicReturnDTO> getPublicInfo(@PathVariable String userId) {
+        var publicInfo = userService.getPublicInfoByUserId(userId);
+        return ResponseEntity.ok(publicInfo);
+    }
+}

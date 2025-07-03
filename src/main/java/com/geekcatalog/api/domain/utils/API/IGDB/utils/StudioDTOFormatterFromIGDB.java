@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.studios.DTO.StudioDTO;
 import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
-import com.geekcatalog.api.service.CountryService;
+import com.geekcatalog.api.service.old.CountryService;
 
 import java.util.List;
 import java.util.Map;

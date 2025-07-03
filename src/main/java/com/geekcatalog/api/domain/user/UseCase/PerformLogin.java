@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,10 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import com.geekcatalog.api.domain.auditLog.LoginStatus;
 import com.geekcatalog.api.domain.auditLog.useCase.RegisterAuditLog;
-import com.geekcatalog.api.domain.user.DTO.UserLoginDTO;
+import com.geekcatalog.api.dto.user.UserLoginDTO;
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
-import com.geekcatalog.api.infra.security.AuthTokensDTO;
 import com.geekcatalog.api.infra.security.TokenService;
 
 import java.util.UUID;

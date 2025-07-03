@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,7 +9,6 @@ import com.geekcatalog.api.domain.auditLog.useCase.RegisterAuditLog;
 import com.geekcatalog.api.domain.authenticationType.AuthenticationTypeRepository;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.domain.userAuthenticationType.UserAuthenticationTypeRepository;
-import com.geekcatalog.api.infra.security.AuthTokensDTO;
 import com.geekcatalog.api.infra.security.TokenService;
 import com.geekcatalog.api.infra.utils.oauth.GetGoogleUserInfo;
 

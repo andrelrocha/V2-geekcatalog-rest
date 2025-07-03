@@ -3,7 +3,7 @@ package com.geekcatalog.api.domain.utils.views;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
-import com.geekcatalog.api.service.UserService;
+import com.geekcatalog.api.service.old.UserService;
 
 @Component
 public class SignInView {

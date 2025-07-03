@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import com.geekcatalog.api.domain.utils.API.IGDB.DTO.IGDBQueryRequestDTO;
 import com.geekcatalog.api.domain.utils.API.Twitch.TwitchAuth;
-import com.geekcatalog.api.service.IGDBService;
+import com.geekcatalog.api.service.old.IGDBService;
 
 import java.util.ArrayList;
 

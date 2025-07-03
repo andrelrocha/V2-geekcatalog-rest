@@ -36,8 +36,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/country/**").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/user/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    /*req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/signin/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/infra/verifyjwt/**").permitAll();
@@ -64,6 +64,7 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.DELETE, "/gamegenre/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.PUT, "/gamegenre/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.POST, "/gamegenre/**").hasRole("ADMIN");
+                     */
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilterApplication, UsernamePasswordAuthenticationFilter.class)
