@@ -37,6 +37,7 @@ public class SecurityConfigurations {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/country/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    req.anyRequest().authenticated();
                     /*req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/signin/**").permitAll();
@@ -65,7 +66,6 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.PUT, "/gamegenre/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.POST, "/gamegenre/**").hasRole("ADMIN");
                      */
-                    req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilterApplication, UsernamePasswordAuthenticationFilter.class)
                 .build();
