@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.infra.exceptions.EmailSendingException;
+import com.geekcatalog.api.dto.utils.MailDTO;
 
 @Component
 public class MailSenderMime {

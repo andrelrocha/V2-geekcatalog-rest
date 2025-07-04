@@ -19,7 +19,7 @@ public class GetRatingByGameAndUserJWT {
     public GameRatingReturnDTO getRatingByGameAndUser(GameRatingByGameAndJWTDTO data) {
         var gameIdUUID = UUID.fromString(data.gameId());
 
-        var user = getUserByTokenJWT.getUserByID(data.tokenJWT());
+        var user = getUserByTokenJWT.getUserByIdClaim(data.tokenJWT());
 
         var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, user.id());
 

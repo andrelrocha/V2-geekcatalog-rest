@@ -1,13 +1,7 @@
 package com.geekcatalog.api.service.impl;
 
-import com.geekcatalog.api.domain.user.UseCase.CreateUser;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
-import com.geekcatalog.api.domain.user.UseCase.PerformLogin;
-import com.geekcatalog.api.domain.user.UseCase.ResetPassword;
-import com.geekcatalog.api.dto.user.UserDTO;
-import com.geekcatalog.api.dto.user.UserLoginDTO;
-import com.geekcatalog.api.dto.user.UserResetPassDTO;
-import com.geekcatalog.api.dto.user.UserReturnDTO;
+import com.geekcatalog.api.domain.user.UseCase.*;
+import com.geekcatalog.api.dto.user.*;
 import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import com.geekcatalog.api.service.AuthService;
@@ -20,11 +14,18 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private CreateUser createUser;
     @Autowired
+    private ForgotPassword forgotPassword;
+    @Autowired
     private GetUserByTokenJWT getUserByTokenJWT;
     @Autowired
     private PerformLogin performLogin;
     @Autowired
     private ResetPassword resetPassword;
+
+    @Override
+    public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
+        return forgotPassword.forgotPassword(data);
+    }
 
     @Override
     public UserReturnDTO getUserByIdClaim(String tokenJWT) {

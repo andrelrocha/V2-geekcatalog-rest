@@ -18,7 +18,7 @@ public class GetAverageRatingByUserJWT {
     private GetUserByTokenJWT getUserByTokenJWT;
 
     public GameRatingAverageDTO getAverageRatingByJWT(String tokenJWT) {
-        var user = getUserByTokenJWT.getUserByID(tokenJWT);
+        var user = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
 
         if (user == null) {
             throw new ValidationException("No user was found for the provided ID.");

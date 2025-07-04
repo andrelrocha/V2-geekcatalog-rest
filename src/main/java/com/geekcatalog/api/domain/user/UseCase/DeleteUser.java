@@ -10,8 +10,6 @@ import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
-import java.util.UUID;
-
 @Component
 public class DeleteUser {
     @Autowired
@@ -30,7 +28,7 @@ public class DeleteUser {
     private TransactionTemplate transactionTemplate;
 
     public void deleteUser(String tokenJWT) {
-        var userDTO = getUserByTokenJWT.getUserByID(tokenJWT);
+        var userDTO = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
         var user = userRepository.findById(userDTO.id())
                 .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
 

@@ -26,7 +26,7 @@ public class GetListPermissionUserByListAndUser {
     private PermissionRepository permissionRepository;
 
     public List<ListPermissionUserReturnDTO> getAllPermissionsByUserAndListID(String tokenJWT, String listId) {
-        var participant = getUserByTokenJWT.getUserByID(tokenJWT);
+        var participant = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
         var participantId = participant.id();
         var listIdUUID = UUID.fromString(listId);
         var list = listAppRepository.findById(listIdUUID)

@@ -27,7 +27,7 @@ public class DeleteAllListPermissionUser {
 
         var listIdUUID = UUID.fromString(data.listId());
 
-        var user = getUserByTokenJWT.getUserByID(data.tokenJwt());
+        var user = getUserByTokenJWT.getUserByIdClaim(data.tokenJwt());
         var ownerId = user.id();
         var owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> new ValidationException("No user was found with the provided ID as the owner in the delete list permission process."));

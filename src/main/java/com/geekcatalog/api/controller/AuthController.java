@@ -1,9 +1,6 @@
 package com.geekcatalog.api.controller;
 
-import com.geekcatalog.api.dto.user.UserDTO;
-import com.geekcatalog.api.dto.user.UserLoginDTO;
-import com.geekcatalog.api.dto.user.UserResetPassDTO;
-import com.geekcatalog.api.dto.user.UserReturnDTO;
+import com.geekcatalog.api.dto.user.*;
 import com.geekcatalog.api.dto.utils.AccessTokenDTO;
 import com.geekcatalog.api.dto.utils.ApiResponseDTO;
 import com.geekcatalog.api.infra.utils.httpCookies.CookieManager;
@@ -33,6 +30,13 @@ public class AuthController {
         var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
         var user = authService.getUserByIdClaim(tokenJWT);
         return ResponseEntity.ok(ApiResponseDTO.success(user));
+    }
+
+    @PostMapping("/password/forgot")
+    @Transactional
+    public ResponseEntity<ApiResponseDTO<String>> forgotPassword(@RequestBody @Valid UserOnlyEmailDTO data) {
+        var messageResponseDTO = authService.forgotPassword(data);
+        return ResponseEntity.ok(ApiResponseDTO.success(messageResponseDTO.message()));
     }
 
     @PostMapping("/password/reset")
