@@ -7,6 +7,7 @@ import com.geekcatalog.api.dto.user.UserDTO;
 import com.geekcatalog.api.dto.userRole.CreateUserRoleLoadDTO;
 import com.geekcatalog.api.service.EntityHandlerService;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
+import com.geekcatalog.api.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,8 @@ public class CreateUser {
     private UserRepository userRepository;
     @Autowired
     private EntityHandlerService entityHandlerService;
+    @Autowired
+    private UserRoleService userRoleService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -38,11 +41,9 @@ public class CreateUser {
 
         var userOnDb = userRepository.save(newUser);
 
-        //falta ajeitar aqui a criação do cargo pro usuário
-        System.out.println("data: "+data);
         if (data.rolesName() != null && !data.rolesName().isEmpty()) {
             var loadDTO = new CreateUserRoleLoadDTO(userOnDb.getId(), data.rolesName());
-            var listUserRole = usuarioCargoService.criarEmCargaUsuarioCargo(cargaDTO);
+            var listUserRole = userRoleService.createUserRoleByLoad(loadDTO);
 
             //apos persistir o usuario, os cargos ainda nao estao carregados em usuario.getUsuarioCargos()
             //(provavelmente por causa do contexto de persistencia e ausencia de fetch automatico).

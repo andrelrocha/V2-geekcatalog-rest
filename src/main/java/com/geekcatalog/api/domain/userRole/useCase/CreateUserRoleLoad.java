@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.userRole.useCase;
 
+import com.geekcatalog.api.domain.userRole.UserRole;
 import com.geekcatalog.api.domain.userRole.UserRoleRepository;
 import com.geekcatalog.api.dto.userRole.CreateUserRoleLoadDTO;
 import com.geekcatalog.api.dto.userRole.UserRoleReturnDTO;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class createUserRoleLoad {
+public class CreateUserRoleLoad {
     @Autowired
     private UserRoleRepository repository;
     @Autowired
@@ -33,18 +34,18 @@ public class createUserRoleLoad {
                 throw new ValidationException("The user is inactive and cannot be assigned roles.");
             }
 
-            List<UsuarioCargo> novosUsuarioCargos = cargos.stream()
-                    .filter(cargo -> !usuarioCargoRepository.existsByUsuarioIdAndCargoId(usuario.getId(), cargo.getId()))
-                    .map(cargo -> new UsuarioCargo(usuario, cargo))
+            List<UserRole> newUserRoles = roles.stream()
+                    .filter(role -> !repository.existsByUserIdAndRoleId(user.getId(), role.getId()))
+                    .map(role -> new UserRole(user, role))
                     .toList();
 
-            if (novosUsuarioCargos.isEmpty()) {
-                throw new ValidationException("Todos os cargos informados já estão atribuídos ao usuário.");
+            if (newUserRoles.isEmpty()) {
+                throw new ValidationException("All specified roles are already assigned to the user.");
             }
 
-            List<UsuarioCargo> salvos = usuarioCargoRepository.saveAll(novosUsuarioCargos);
+            List<UserRole> saved = repository.saveAll(newUserRoles);
 
-            return salvos.stream().map(UsuarioCargoRetornoDTO::new).toList();
+            return saved.stream().map(UserRoleReturnDTO::new).toList();
         } catch (Exception e) {
             throw new ValidationException(e.getMessage());
         }
