@@ -9,8 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import com.geekcatalog.api.domain.auditLog.LoginStatus;
-import com.geekcatalog.api.domain.auditLog.useCase.RegisterAuditLog;
+import com.geekcatalog.api.domain.auditLogLogin.LoginStatus;
+import com.geekcatalog.api.domain.auditLogLogin.useCase.RegisterAuditLog;
 import com.geekcatalog.api.dto.user.UserLoginDTO;
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
@@ -55,8 +55,7 @@ public class PerformLogin {
                     data.login(),
                     request,
                     LoginStatus.SUCCESS,
-                    request.getHeader("User-Agent"),
-                    UUID.fromString("a05fa936-8640-4474-b5cd-963a36ff5fe6")
+                    request.getHeader("User-Agent")
             );
 
             return new AuthTokensDTO(accessToken, refreshToken);
@@ -74,8 +73,7 @@ public class PerformLogin {
                 login,
                 request,
                 LoginStatus.FAILURE,
-                request.getHeader("User-Agent"),
-                UUID.fromString("a05fa936-8640-4474-b5cd-963a36ff5fe6")
+                request.getHeader("User-Agent")
         );
     }
 

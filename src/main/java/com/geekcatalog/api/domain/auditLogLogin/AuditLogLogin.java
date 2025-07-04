@@ -1,26 +1,22 @@
-package com.geekcatalog.api.domain.auditLog;
+package com.geekcatalog.api.domain.auditLogLogin;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import com.geekcatalog.api.domain.authenticationType.AuthenticationType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table(name = "audit_log")
-@Entity(name = "AuditLog")
+@Table(name = "audit_log_login")
+@Entity(name = "AuditLogLogin")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class AuditLog {
+public class AuditLogLogin {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
-    private UUID id;
+    @Column(name = "id", nullable = false, length = 36, updatable = false)
+    private String id;
 
     @Column(name = "user_name", nullable = false)
     private String userName;
@@ -34,11 +30,7 @@ public class AuditLog {
     @Column(name = "ip_address", length = 45)
     private String ipAddress;
 
-    @ManyToOne
-    @JoinColumn(name = "authentication_type", referencedColumnName = "id")
-    private AuthenticationType authenticationType;
-
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private LoginStatus loginStatus;
 
     @Column(name = "user_agent", columnDefinition = "TEXT")
@@ -60,6 +52,7 @@ public class AuditLog {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+        id = UUID.randomUUID().toString();
     }
 
     @PreUpdate

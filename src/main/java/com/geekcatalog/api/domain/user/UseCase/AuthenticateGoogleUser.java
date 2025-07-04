@@ -5,10 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.auditLog.useCase.RegisterAuditLog;
-import com.geekcatalog.api.domain.authenticationType.AuthenticationTypeRepository;
+import com.geekcatalog.api.domain.auditLogLogin.useCase.RegisterAuditLog;
 import com.geekcatalog.api.domain.user.UserRepository;
-import com.geekcatalog.api.domain.userAuthenticationType.UserAuthenticationTypeRepository;
 import com.geekcatalog.api.infra.security.TokenService;
 import com.geekcatalog.api.infra.utils.oauth.GetGoogleUserInfo;
 
@@ -20,10 +18,6 @@ public class AuthenticateGoogleUser {
     private static final int PASSWORD_LENGTH = 20;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private AuthenticationTypeRepository authenticationTypeRepository;
-    @Autowired
-    private UserAuthenticationTypeRepository userAuthenticationTypeRepository;
     @Autowired
     private TokenService tokenService;
     @Autowired
