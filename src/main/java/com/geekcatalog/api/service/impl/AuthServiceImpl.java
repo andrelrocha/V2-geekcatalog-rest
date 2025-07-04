@@ -1,11 +1,15 @@
 package com.geekcatalog.api.service.impl;
 
 import com.geekcatalog.api.domain.user.UseCase.CreateUser;
+import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
 import com.geekcatalog.api.domain.user.UseCase.PerformLogin;
+import com.geekcatalog.api.domain.user.UseCase.ResetPassword;
 import com.geekcatalog.api.dto.user.UserDTO;
 import com.geekcatalog.api.dto.user.UserLoginDTO;
+import com.geekcatalog.api.dto.user.UserResetPassDTO;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.dto.utils.AuthTokensDTO;
+import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import com.geekcatalog.api.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,21 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private CreateUser createUser;
     @Autowired
+    private GetUserByTokenJWT getUserByTokenJWT;
+    @Autowired
     private PerformLogin performLogin;
+    @Autowired
+    private ResetPassword resetPassword;
+
+    @Override
+    public UserReturnDTO getUserByIdClaim(String tokenJWT) {
+        return getUserByTokenJWT.getUserByIdClaim(tokenJWT);
+    }
+
+    @Override
+    public MessageResponseDTO resetPassword(UserResetPassDTO data) {
+        return resetPassword.resetPassword(data);
+    }
 
     @Override
     public AuthTokensDTO signIn(UserLoginDTO data, HttpServletRequest request) {

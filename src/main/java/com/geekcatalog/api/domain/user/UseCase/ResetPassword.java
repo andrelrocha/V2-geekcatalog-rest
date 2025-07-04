@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.dto.user.UserResetPassDTO;
+import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ public class ResetPassword {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void resetPassword(UserResetPassDTO data) {
+    public MessageResponseDTO resetPassword(UserResetPassDTO data) {
         try {
             var userExists = repository.existsByEmail(data.email());
 
@@ -35,6 +36,7 @@ public class ResetPassword {
             if (tokenIsValid) {
                 String encodedPassword = bCryptPasswordEncoder.encode(data.password());
                 user.setPassword(encodedPassword);
+                return new MessageResponseDTO("Success reseting user password.");
             } else {
                 throw new ValidationException("Invalid reset token key");
             }

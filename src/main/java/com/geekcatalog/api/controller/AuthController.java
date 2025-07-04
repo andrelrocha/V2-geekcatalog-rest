@@ -2,6 +2,7 @@ package com.geekcatalog.api.controller;
 
 import com.geekcatalog.api.dto.user.UserDTO;
 import com.geekcatalog.api.dto.user.UserLoginDTO;
+import com.geekcatalog.api.dto.user.UserResetPassDTO;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.dto.utils.AccessTokenDTO;
 import com.geekcatalog.api.dto.utils.ApiResponseDTO;
@@ -15,10 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,6 +27,20 @@ public class AuthController {
 
     @Autowired
     private CookieManager cookieManager;
+
+    @GetMapping("/user/me")
+    public ResponseEntity<ApiResponseDTO<UserReturnDTO>> getUserByTokenJWT(@RequestHeader("Authorization") String authorizationHeader) {
+        var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        var user = authService.getUserByIdClaim(tokenJWT);
+        return ResponseEntity.ok(ApiResponseDTO.success(user));
+    }
+
+    @PostMapping("/password/reset")
+    @Transactional
+    public ResponseEntity<ApiResponseDTO<String>> resetPassword(@RequestBody @Valid UserResetPassDTO data) {
+        var messageResponseDTO = authService.resetPassword(data);
+        return ResponseEntity.ok(ApiResponseDTO.success(messageResponseDTO.message()));
+    }
 
     @PostMapping("/signin")
     @Transactional
@@ -48,4 +60,5 @@ public class AuthController {
         var newUserDTO = authService.signUp(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseDTO.success(newUserDTO));
     }
+
 }
