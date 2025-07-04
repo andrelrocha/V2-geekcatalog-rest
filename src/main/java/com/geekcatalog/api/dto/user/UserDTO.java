@@ -1,13 +1,11 @@
 package com.geekcatalog.api.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record UserDTO(
 
@@ -45,5 +43,8 @@ public record UserDTO(
         Boolean twoFactorEnabled,
         Boolean refreshTokenEnabled,
 
-        String theme
+        String theme,
+
+        @NotEmpty(message = "At least one role must be informed.")
+        List<@NotBlank(message = "Role list can't be blank.") String> rolesName
 ) {}

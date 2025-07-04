@@ -4,6 +4,7 @@ import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.dto.userRole.CreateUserRoleLoadDTO;
 import com.geekcatalog.api.service.EntityHandlerService;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,19 @@ public class CreateUser {
         newUser.setPassword(encodedPassword);
 
         var userOnDb = userRepository.save(newUser);
+
+        //falta ajeitar aqui a criação do cargo pro usuário
+        System.out.println("data: "+data);
+        if (data.rolesName() != null && !data.rolesName().isEmpty()) {
+            var loadDTO = new CreateUserRoleLoadDTO(userOnDb.getId(), data.rolesName());
+            var listUserRole = usuarioCargoService.criarEmCargaUsuarioCargo(cargaDTO);
+
+            //apos persistir o usuario, os cargos ainda nao estao carregados em usuario.getUsuarioCargos()
+            //(provavelmente por causa do contexto de persistencia e ausencia de fetch automatico).
+            //para evitar consultas desnecessarias ao banco e garantir que o dto tenha os dados corretos,
+            //utilizo diretamente o retorno da criação da relação que ja traz os cargos vinculados.
+            return new UserReturnDTO(userOnDb, listUserRole);
+        }
 
         return new UserReturnDTO(userOnDb);
     }
