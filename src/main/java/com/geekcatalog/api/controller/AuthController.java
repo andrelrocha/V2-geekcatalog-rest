@@ -32,6 +32,12 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponseDTO.success(user));
     }
 
+    @GetMapping("/user/public/{userId}")
+    public ResponseEntity<ApiResponseDTO<UserPublicReturnDTO>> getUserPublicInfo(@PathVariable String userId) {
+        var user = authService.getPublicInfoByUserId(userId);
+        return ResponseEntity.ok(ApiResponseDTO.success(user));
+    }
+
     @PostMapping("/password/forgot")
     @Transactional
     public ResponseEntity<ApiResponseDTO<String>> forgotPassword(@RequestBody @Valid UserOnlyEmailDTO data) {

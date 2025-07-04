@@ -4,6 +4,7 @@ import com.geekcatalog.api.domain.role.Role;
 import com.geekcatalog.api.domain.user.DTO.*;
 import com.geekcatalog.api.domain.userRole.UserRole;
 import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.dto.user.UserForgotDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

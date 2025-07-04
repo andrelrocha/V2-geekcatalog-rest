@@ -50,9 +50,9 @@ public class AuditLogLogin {
 
     @PrePersist
     protected void onCreate() {
+        id = UUID.randomUUID().toString();
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        id = UUID.randomUUID().toString();
     }
 
     @PreUpdate

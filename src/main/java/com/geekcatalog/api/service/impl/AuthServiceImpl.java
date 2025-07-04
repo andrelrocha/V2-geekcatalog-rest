@@ -16,6 +16,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private ForgotPassword forgotPassword;
     @Autowired
+    private GetPublicInfo getPublicInfo;
+    @Autowired
     private GetUserByTokenJWT getUserByTokenJWT;
     @Autowired
     private PerformLogin performLogin;
@@ -25,6 +27,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
         return forgotPassword.forgotPassword(data);
+    }
+
+    @Override
+    public UserPublicReturnDTO getPublicInfoByUserId(String userId) {
+        return getPublicInfo.getPublicInfoByUserId(userId);
     }
 
     @Override

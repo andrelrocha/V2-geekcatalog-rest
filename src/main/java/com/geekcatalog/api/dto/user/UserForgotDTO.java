@@ -1,4 +1,4 @@
-package com.geekcatalog.api.domain.user.DTO;
+package com.geekcatalog.api.dto.user;
 
 import java.time.LocalDateTime;
 

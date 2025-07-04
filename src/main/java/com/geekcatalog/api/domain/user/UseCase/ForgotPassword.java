@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.infra.exceptions.EmailSendingException;
-import com.geekcatalog.api.domain.user.DTO.UserForgotDTO;
+import com.geekcatalog.api.dto.user.UserForgotDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 
 import java.time.LocalDateTime;

@@ -1,7 +1,6 @@
-package com.geekcatalog.api.domain.user.DTO;
+package com.geekcatalog.api.dto.user;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public record UserPublicReturnDTO(
                                   String name,
