@@ -13,7 +13,7 @@ public class GetListRoleEntitiesByNames {
     @Autowired
     private RoleRepository repository;
 
-    public List<Role> getEntitiesByNames(List<String> names) {
+    public List<Role> getRolesByNames(List<String> names) {
         List<String> normalizedNames = names.stream()
                 .map(name -> name.trim().toLowerCase())
                 .toList();

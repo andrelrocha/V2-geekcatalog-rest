@@ -2,6 +2,7 @@ package com.geekcatalog.api.domain.userRole.useCase;
 
 import com.geekcatalog.api.domain.userRole.UserRoleRepository;
 import com.geekcatalog.api.dto.userRole.CreateUserRoleLoadDTO;
+import com.geekcatalog.api.dto.userRole.UserRoleReturnDTO;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.service.EntityHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,15 @@ public class createUserRoleLoad {
     @Autowired
     private EntityHandlerService entityHandlerService;
 
-    public List<UsuarioCargoRetornoDTO> criarEmCargaUsuarioCargo(CreateUserRoleLoadDTO data) {
+    public List<UserRoleReturnDTO> createUserRoleByLoad(CreateUserRoleLoadDTO data) {
         try {
             Set<String> nomesUnicos = new HashSet<>(data.roleNames());
             if (nomesUnicos.size() < data.roleNames().size()) {
                 throw new ValidationException("There are duplicate roles in the input list.");
             }
 
-            var user = entityHandlerService.obterUsuarioPorId(data.usuarioId());
-            var roles = entityHandlerService.obterEntidadesCargoPorNome(data.cargosNome());
+            var user = entityHandlerService.getUserById(data.userId());
+            var roles = entityHandlerService.getRolesByNames(data.roleNames());
 
             if (!user.isEnabled()) {
                 throw new ValidationException("The user is inactive and cannot be assigned roles.");
