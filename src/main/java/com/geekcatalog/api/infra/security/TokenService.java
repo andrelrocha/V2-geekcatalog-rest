@@ -106,17 +106,17 @@ public class TokenService {
     public String getIdClaim(String tokenJwt) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(accessSecret);
-            String userVerifiedId = String.valueOf(JWT.require(algorithm)
+            DecodedJWT decodedJWT = JWT.require(algorithm)
                     .withIssuer("geekcatalog-api")
                     .build()
-                    .verify(tokenJwt)
-                    .getClaim("id"));
+                    .verify(tokenJwt);
 
-            return userVerifiedId;
+            return decodedJWT.getClaim("id").asString();
         } catch (JWTVerificationException exception){
             throw new RuntimeException("Invalid or expired JWT token.");
         }
     }
+
 
     private Instant dateExpires() {
         return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-03:00"));
