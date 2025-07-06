@@ -13,4 +13,5 @@ public interface AuthService {
     MessageResponseDTO resetPassword(UserResetPassDTO data);
     AuthTokensDTO signIn(UserLoginDTO data, HttpServletRequest request);
     UserReturnDTO signUp(UserDTO data);
+    UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT);
 }

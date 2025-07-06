@@ -31,7 +31,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("geekcatalog-api")
                     .withSubject(user.getEmail())
-                    .withClaim("id", user.getId().toString())
+                    .withClaim("id", user.getId())
                     .withClaim("role", user.getRoles().toString())
                     .withClaim("theme", user.getTheme().toString())
                     .withIssuedAt(Instant.now())

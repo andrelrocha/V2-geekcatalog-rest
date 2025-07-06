@@ -25,6 +25,8 @@ public class AuthServiceImpl implements AuthService {
     private PerformLogin performLogin;
     @Autowired
     private ResetPassword resetPassword;
+    @Autowired
+    private UpdateUser updateUser;
 
     @Override
     public void deleteUser(String tokenJWT) {
@@ -59,5 +61,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserReturnDTO signUp(UserDTO data) {
         return createUser.signUp(data);
+    }
+
+    @Override
+    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
+        return updateUser.updateUserInfo(dto, tokenJWT);
     }
 }
