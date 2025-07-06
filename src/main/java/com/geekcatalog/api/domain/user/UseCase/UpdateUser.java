@@ -1,11 +1,11 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
 import com.geekcatalog.api.dto.user.UserReturnDTO;
+import com.geekcatalog.api.dto.user.UserUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.country.Country;
 import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.dto.user.UserUpdateDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.infra.security.TokenService;
@@ -23,7 +23,6 @@ public class UpdateUser {
     private TokenService tokenService;
 
     public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
-
         var userId = tokenService.getIdClaim(tokenJWT);
         userId = userId.replaceAll("\"", "");
 
@@ -39,15 +38,7 @@ public class UpdateUser {
                     .orElseThrow(() -> new ValidationException("No country was found fot the informed ID, during user update."));
         }
 
-        LocalDate formattedBirthday = null;
-        if (dto.birthday() != null) {
-            var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            formattedBirthday = LocalDate.parse(dto.birthday().format(formatter));
-        }
-
-        var data = new com.geekcatalog.api.domain.user.DTO.UserUpdateDTO(dto.name(), dto.username(), dto.twoFactorEnabled(), dto.refreshTokenEnabled(), dto.phone(), formattedBirthday, country, dto.theme());
-
-        user.updateUser(data);
+        user.updateUser(dto, country);
 
         var userUpdated = repository.save(user);
 

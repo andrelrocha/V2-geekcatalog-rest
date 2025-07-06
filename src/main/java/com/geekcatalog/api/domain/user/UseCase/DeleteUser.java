@@ -16,6 +16,7 @@ public class DeleteUser {
     private UserRepository userRepository;
     @Autowired
     private GetUserByTokenJWT getUserByTokenJWT;
+    /*
     @Autowired
     private GameListRepository gameListRepository;
     @Autowired
@@ -24,6 +25,7 @@ public class DeleteUser {
     private ListPermissionUserRepository listPermissionUserRepository;
     @Autowired
     private ListAppRepository listAppRepository;
+     */
     @Autowired
     private TransactionTemplate transactionTemplate;
 
@@ -34,6 +36,7 @@ public class DeleteUser {
 
         transactionTemplate.execute(status -> {
             try {
+                /*
                 var gameListsToDelete = gameListRepository.findAllByUserId(user.getId());
                 var gameRatingsToDelete = gameRatingRepository.findAllByUserId(user.getId());
                 var listsPermissionUserToDelete = listPermissionUserRepository.findAllByUserId(user.getId());
@@ -54,12 +57,12 @@ public class DeleteUser {
                 }
                 if (!listsAppToDelete.isEmpty()) {
                     listAppRepository.deleteAll(listsAppToDelete);
-                }
+                }*/
 
                 userRepository.delete(user);
             } catch (Exception e) {
                 status.setRollbackOnly();
-                throw new RuntimeException("An error occurred during the delete transaction of the game and its related entities", e);
+                throw new RuntimeException("An error occurred during the delete transaction of an user", e);
             }
             return null;
         });
