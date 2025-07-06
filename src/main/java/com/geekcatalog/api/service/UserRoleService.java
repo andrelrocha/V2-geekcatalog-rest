@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface UserRoleService {
     List<UserRoleReturnDTO> createUserRoleByLoad(CreateUserRoleLoadDTO data);
+    void updateRoles(List<String> rolesId, String userId);
 }

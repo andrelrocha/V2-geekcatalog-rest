@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.dto.user.UserUpdateDTO;
 import com.geekcatalog.api.service.EntityHandlerService;
@@ -24,8 +25,7 @@ public class UpdateUser {
     public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
         var userDTO = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
 
-        var user = repository.findById(userDTO.id())
-                .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
+        var user = findUserById(userDTO.id());
 
         Country country = null;
         if (!(dto.countryId().isEmpty() || dto.countryId().isBlank())) {
@@ -37,10 +37,16 @@ public class UpdateUser {
         var userUpdated = repository.save(user);
 
         if (!dto.rolesId().isEmpty()) {
-            System.out.println("Foi passado um novo cargo");
-            //usuarioCargoService.atualizarCargos(data.cargosId(), usuarioAtualizado.getId());
+            userRoleService.updateRoles(dto.rolesId(), userUpdated.getId());
         }
 
+        userUpdated = findUserById(userUpdated.getId());
+
         return new UserReturnDTO(userUpdated);
+    }
+
+    private User findUserById(String userId) {
+        return repository.findById(userId)
+                .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
     }
 }

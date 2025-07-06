@@ -18,10 +18,12 @@ public class UpdateUserRole {
     private CreateUserRole createUserRole;
     @Autowired
     private DeleteUserRole deleteUserRole;
+    @Autowired
+    private GetRolesByUserId getRolesByUserId;
 
     @Transactional
     public void updateRoles(List<String> rolesId, String userId) {
-        Set<String> current = obterCargosUsuarioId.obterCargosPorIdUsuario(userId)
+        Set<String> current = getRolesByUserId.getRolesByUserId(userId)
                 .stream()
                 .map(UserRoleReturnDTO::roleId)
                 .collect(Collectors.toSet());
