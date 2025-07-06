@@ -18,7 +18,7 @@ public class CreateUserRole {
     private EntityHandlerService entityHandlerService;
 
     @Transactional
-    public UserRoleReturnDTO criar(CreateUserRoleDTO data) {
+    public UserRoleReturnDTO create(CreateUserRoleDTO data) {
         try {
             var user = entityHandlerService.getUserById(data.userId());
             var role = entityHandlerService.getRoleById(data.roleId());
