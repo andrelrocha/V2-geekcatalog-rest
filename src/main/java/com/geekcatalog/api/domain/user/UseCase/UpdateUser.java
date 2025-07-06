@@ -5,15 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.country.Country;
 import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.domain.user.DTO.UserGetInfoUpdateDTO;
-import com.geekcatalog.api.domain.user.DTO.UserUpdateDTO;
+import com.geekcatalog.api.dto.user.UserUpdateDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.infra.security.TokenService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Component
 public class UpdateUser {
@@ -24,7 +22,7 @@ public class UpdateUser {
     @Autowired
     private TokenService tokenService;
 
-    public UserReturnDTO updateUserInfo(UserGetInfoUpdateDTO dto, String tokenJWT) {
+    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
 
         var userId = tokenService.getIdClaim(tokenJWT);
         userId = userId.replaceAll("\"", "");
@@ -47,7 +45,7 @@ public class UpdateUser {
             formattedBirthday = LocalDate.parse(dto.birthday().format(formatter));
         }
 
-        var data = new UserUpdateDTO(dto.name(), dto.username(), dto.twoFactorEnabled(), dto.refreshTokenEnabled(), dto.phone(), formattedBirthday, country, dto.theme());
+        var data = new com.geekcatalog.api.domain.user.DTO.UserUpdateDTO(dto.name(), dto.username(), dto.twoFactorEnabled(), dto.refreshTokenEnabled(), dto.phone(), formattedBirthday, country, dto.theme());
 
         user.updateUser(data);
 

@@ -25,6 +25,15 @@ public class AuthController {
     @Autowired
     private CookieManager cookieManager;
 
+    @DeleteMapping("/user/me")
+    public ResponseEntity deleteUser(@RequestHeader("Authorization") String authorizationHeader) {
+        var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        authService.deleteUser(tokenJWT);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
     @GetMapping("/user/me")
     public ResponseEntity<ApiResponseDTO<UserReturnDTO>> getUserByTokenJWT(@RequestHeader("Authorization") String authorizationHeader) {
         var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();

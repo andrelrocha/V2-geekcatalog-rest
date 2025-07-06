@@ -14,6 +14,8 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private CreateUser createUser;
     @Autowired
+    private DeleteUser deleteUser;
+    @Autowired
     private ForgotPassword forgotPassword;
     @Autowired
     private GetPublicInfo getPublicInfo;
@@ -23,6 +25,11 @@ public class AuthServiceImpl implements AuthService {
     private PerformLogin performLogin;
     @Autowired
     private ResetPassword resetPassword;
+
+    @Override
+    public void deleteUser(String tokenJWT) {
+        deleteUser.deleteUser(tokenJWT);
+    }
 
     @Override
     public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
