@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.ReleaseDateInfo;
+import rocha.andre.api.domain.utils.API.IGDB.DTO.ReleaseDateInfo;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -159,14 +159,9 @@ public class User implements UserDetails {
     }
 
     public void updateUser(UserUpdateDTO data, Country country) {
-        if (data.name() != null ) {
+        if (data.name() != null && !data.name().isEmpty()) {
             this.name = data.name();
         }
-
-        /*
-        if (data.username() != null) {
-            this.username = data.username();
-        } */
 
         if (data.phone() != null) {
             this.phone = data.phone();
@@ -213,6 +208,4 @@ public class User implements UserDetails {
     public void updateCountry(Country country) {
         this.country = country;
     }
-
-    public void updateBirthday(LocalDate date) { this.birthday = date; }
 }

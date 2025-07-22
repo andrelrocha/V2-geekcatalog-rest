@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Authentication routes mapped on Controller.")
+@AllArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthService authService;
-
-    @Autowired
-    private CookieManager cookieManager;
+    private final AuthService authService;
+    private final CookieManager cookieManager;
 
     @DeleteMapping("/user/me")
     public ResponseEntity deleteUser(@RequestHeader("Authorization") String authorizationHeader) {

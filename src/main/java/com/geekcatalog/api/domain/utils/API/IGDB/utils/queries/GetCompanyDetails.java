@@ -7,10 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyInfo;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CountryInfo;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.InvolvedCompanyInfo;
+import com.geekcatalog.api.dto.utils.api.IGDB.*;
 
 import java.util.ArrayList;
 import java.util.List;

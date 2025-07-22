@@ -1,16 +1,16 @@
 package com.geekcatalog.api.domain.utils.API.IGDB.utils;
 
-import com.geekcatalog.api.dto.country.CountryReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.studios.DTO.StudioDTO;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
-import com.geekcatalog.api.service.old.CountryService;
+import rocha.andre.api.domain.country.DTO.CountryReturnDTO;
+import rocha.andre.api.domain.studios.DTO.StudioDTO;
+import rocha.andre.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
+import rocha.andre.api.service.CountryService;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.geekcatalog.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
+import static rocha.andre.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
 
 @Component
 public class StudioDTOFormatterFromIGDB {

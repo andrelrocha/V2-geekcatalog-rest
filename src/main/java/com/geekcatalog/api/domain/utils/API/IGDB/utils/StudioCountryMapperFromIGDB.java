@@ -2,15 +2,15 @@ package com.geekcatalog.api.domain.utils.API.IGDB.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.dto.country.CountryReturnDTO;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
-import com.geekcatalog.api.service.old.CountryService;
+import rocha.andre.api.domain.country.DTO.CountryReturnDTO;
+import rocha.andre.api.domain.utils.API.IGDB.DTO.CompanyReturnDTO;
+import rocha.andre.api.service.CountryService;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.geekcatalog.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
+import static rocha.andre.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
 
 @Component
 public class StudioCountryMapperFromIGDB {
@@ -21,7 +21,7 @@ public class StudioCountryMapperFromIGDB {
         var countryNames = extractCountryNames(studios);
         List<CountryReturnDTO> countries = countryService.getCountriesByName(countryNames);
         return countries.stream().collect(Collectors.toMap(
-                country -> normalizeString(country.nameCommon()),
+                country -> normalizeString(country.name()),
                 country -> country
         ));
     }
