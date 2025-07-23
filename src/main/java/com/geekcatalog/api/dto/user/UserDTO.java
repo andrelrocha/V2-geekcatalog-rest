@@ -8,12 +8,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record UserDTO(
-
-        @NotNull
+        @NotEmpty
         @Email(message = "Invalid email address")
         String email,
 
-        @NotNull
+        @NotEmpty
         @Size(min = 8, message = "Password must be at least 8 characters long")
         @Pattern(
                 regexp = "^(?=.*[A-Z])(?=.*\\d).*$",
@@ -21,11 +20,11 @@ public record UserDTO(
         )
         String password,
 
-        @NotNull
+        @NotEmpty
         String name,
 
+        @NotEmpty
         @Size(max = 20, message = "Username must have at most 20 characters")
-        @NotNull
         String username,
 
         @Pattern(
@@ -38,6 +37,7 @@ public record UserDTO(
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate birthday,
 
+        @NotEmpty
         String countryId,
 
         Boolean twoFactorEnabled,

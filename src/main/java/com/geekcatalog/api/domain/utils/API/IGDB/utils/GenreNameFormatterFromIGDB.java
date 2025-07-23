@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocha.andre.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
+import static com.geekcatalog.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
+
 
 @Component
 public class GenreNameFormatterFromIGDB {

@@ -77,7 +77,7 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponseDTO.success(new AccessTokenDTO(tokensJwt.accessToken())));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/user")
     @Transactional
     public ResponseEntity<ApiResponseDTO<UserReturnDTO>> signUp(@RequestBody @Valid UserDTO data) {
         var newUserDTO = authService.signUp(data);
