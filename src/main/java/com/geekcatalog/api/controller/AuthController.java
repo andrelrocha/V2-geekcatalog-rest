@@ -24,13 +24,14 @@ public class AuthController {
     private final AuthService authService;
     private final CookieManager cookieManager;
 
-    @DeleteMapping("/user/me")
-    public ResponseEntity deleteUser(@RequestHeader("Authorization") String authorizationHeader) {
-        var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
-        authService.deleteUser(tokenJWT);
+    @DeleteMapping("/user/{id}")
+    @Transactional
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        authService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
+    /*
     @PutMapping("/user/me")
     public ResponseEntity<ApiResponseDTO<UserReturnDTO>> updateUser(@RequestHeader("Authorization") String authorizationHeader, @RequestBody UserUpdateDTO data) {
         var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
@@ -44,6 +45,8 @@ public class AuthController {
         var user = authService.getUserByIdClaim(tokenJWT);
         return ResponseEntity.ok(ApiResponseDTO.success(user));
     }
+
+     */
 
     @GetMapping("/user/public/{userId}")
     public ResponseEntity<ApiResponseDTO<UserPublicReturnDTO>> getUserPublicInfo(@PathVariable String userId) {
@@ -83,5 +86,4 @@ public class AuthController {
         var newUserDTO = authService.signUp(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseDTO.success(newUserDTO));
     }
-
 }

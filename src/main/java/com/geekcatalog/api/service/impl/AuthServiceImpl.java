@@ -6,31 +6,25 @@ import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import com.geekcatalog.api.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    @Autowired
-    private CreateUser createUser;
-    @Autowired
-    private DeleteUser deleteUser;
-    @Autowired
-    private ForgotPassword forgotPassword;
-    @Autowired
-    private GetPublicInfo getPublicInfo;
-    @Autowired
-    private GetUserByTokenJWT getUserByTokenJWT;
-    @Autowired
-    private PerformLogin performLogin;
-    @Autowired
-    private ResetPassword resetPassword;
-    @Autowired
-    private UpdateUser updateUser;
+    private final CreateUser createUser;
+    private final DeleteUser deleteUser;
+    private final ForgotPassword forgotPassword;
+    private final GetPublicInfo getPublicInfo;
+    private final GetUserByTokenJWT getUserByTokenJWT;
+    private final PerformLogin performLogin;
+    private final ResetPassword resetPassword;
+    private final UpdateUser updateUser;
 
     @Override
-    public void deleteUser(String tokenJWT) {
-        deleteUser.deleteUser(tokenJWT);
+    public void deleteUser(String userId) {
+        deleteUser.deleteUser(userId);
     }
 
     @Override
@@ -41,11 +35,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserPublicReturnDTO getPublicInfoByUserId(String userId) {
         return getPublicInfo.getPublicInfoByUserId(userId);
-    }
-
-    @Override
-    public UserReturnDTO getUserByIdClaim(String tokenJWT) {
-        return getUserByTokenJWT.getUserByIdClaim(tokenJWT);
     }
 
     @Override

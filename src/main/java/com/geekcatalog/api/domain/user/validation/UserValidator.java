@@ -9,15 +9,25 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserValidator {
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
     public void validateSignUp(UserDTO data) {
-        if (userRepository.userExistsByEmail(data.email())) {
+        if (repository.userExistsByEmail(data.email())) {
             throw new ValidationException("Email on user creation already exists in our database");
         }
 
-        if (userRepository.userExistsByUsername(data.username())) {
+        if (repository.userExistsByUsername(data.username())) {
             throw new ValidationException("Username on user creation already exists in our database");
+        }
+    }
+
+    public void validateUserId(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new ValidationException("ID must be informed.");
+        }
+
+        if (!repository.existsById(userId)) {
+            throw new ValidationException("No User was found for the provided ID.");
         }
     }
 }

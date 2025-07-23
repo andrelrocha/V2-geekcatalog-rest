@@ -6,10 +6,9 @@ import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface AuthService {
-    void deleteUser(String tokenJWT);
+    void deleteUser(String userId);
     MessageResponseDTO forgotPassword(UserOnlyEmailDTO data);
     UserPublicReturnDTO getPublicInfoByUserId(String userId);
-    UserReturnDTO getUserByIdClaim(String tokenJWT);
     MessageResponseDTO resetPassword(UserResetPassDTO data);
     AuthTokensDTO signIn(UserLoginDTO data, HttpServletRequest request);
     UserReturnDTO signUp(UserDTO data);
