@@ -59,7 +59,7 @@ public class TokenService {
 
             return builder.sign(algorithm);
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro enquanto gerava o token JWT de persistência (refresh).", exception);
+            throw new RuntimeException("Error occurred while generating the refresh JWT token.", exception);
         }
     }
 
@@ -102,7 +102,7 @@ public class TokenService {
 
             return userVerified;
         } catch (JWTVerificationException exception){
-            throw new RuntimeException("Invalid or expired JWT token.");
+            throw new RuntimeException("Error while getting the subject claim from the JWT.");
         }
     }
 
@@ -116,10 +116,23 @@ public class TokenService {
 
             return decodedJWT.getClaim("id").asString();
         } catch (JWTVerificationException exception){
-            throw new RuntimeException("Invalid or expired JWT token.");
+            throw new RuntimeException("Error while getting the ID claim from the JWT.");
         }
     }
 
+    public DecodedJWT parseClaims(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(refreshSecret);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer("geekcatalog-api")
+                    .build();
+
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return decodedJWT;
+        } catch (JWTVerificationException | IllegalArgumentException e) {
+            throw new RuntimeException("Error while parsing JWT claims.");
+        }
+    }
 
     private Instant accessTokenExpirationDate() {
         return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
@@ -127,6 +140,6 @@ public class TokenService {
 
     private Instant refreshTokenExpirationDate() {
         //se alterar aqui tem que levar em consideração o expiration date do cookie http em cookieManager
-        return LocalDateTime.now().plusDays(15).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.of("-03:00"));
     }
 }

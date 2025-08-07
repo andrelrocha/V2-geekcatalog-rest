@@ -42,43 +42,18 @@ public class AuthController {
         cookieManager.addRefreshTokenCookie(response, tokensJwt.refreshToken());
         return ResponseEntity.ok(ApiResponseDTO.success(new TokenDTO(tokensJwt.accessToken())));
     }
-    /*
-    @DeleteMapping("/user/{id}")
-    @Transactional
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        authService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponseDTO<TokenDTO>> updateAccessToken(HttpServletRequest request) {
+        var refreshToken = cookieManager.getRefreshTokenFromCookie(request);
+        var newAccessToken = authService.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok(ApiResponseDTO.success(newAccessToken));
     }
 
 
-
-    @GetMapping("/user/me")
-    public ResponseEntity<ApiResponseDTO<UserReturnDTO>> getUserByTokenJWT(@RequestHeader("Authorization") String authorizationHeader) {
-        var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
-        var user = authService.getUserByIdClaim(tokenJWT);
-        return ResponseEntity.ok(ApiResponseDTO.success(user));
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseDTO<MessageResponseDTO>> logout(HttpServletResponse response, HttpServletRequest request) {
+        authService.logout(request, response);
+        return ResponseEntity.ok(ApiResponseDTO.success(new MessageResponseDTO("User was successfully logged off.")));
     }
-
-    @GetMapping("/user/public/{userId}")
-    public ResponseEntity<ApiResponseDTO<UserPublicReturnDTO>> getUserPublicInfo(@PathVariable String userId) {
-        var user = authService.getPublicInfoByUserId(userId);
-        return ResponseEntity.ok(ApiResponseDTO.success(user));
-    }
-
-
-
-    @PostMapping("/signin")
-    @Transactional
-    public ResponseEntity<ApiResponseDTO<AccessTokenDTO>> signIn(@RequestBody @Valid UserLoginDTO data,
-                                                                        HttpServletResponse response,
-                                                                        HttpServletRequest request) {
-        var tokensJwt = authService.signIn(data, request);
-        if (tokensJwt.refreshToken() != null) {
-            cookieManager.addRefreshTokenCookie(response, tokensJwt.refreshToken());
-        }
-        return ResponseEntity.ok(ApiResponseDTO.success(new AccessTokenDTO(tokensJwt.accessToken())));
-    }
-    */
-
-
 }

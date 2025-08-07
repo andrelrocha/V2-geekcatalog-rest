@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.user.validation;
 
+import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.domain.user.UserTheme;
 import com.geekcatalog.api.dto.user.UserDTO;
@@ -77,6 +78,16 @@ public class UserValidator {
 
         if (dto.theme() != null && !EnumUtils.isValidEnum(UserTheme.class, dto.theme())) {
             throw new ValidationException("Invalid theme provided.");
+        }
+    }
+
+    public void validateUserExistsAndIsActive(User user) {
+        if (user == null) {
+            throw new ValidationException("User not found.");
+        }
+
+        if (!user.isEnabled()) {
+            throw new ValidationException("User is inactive.");
         }
     }
 

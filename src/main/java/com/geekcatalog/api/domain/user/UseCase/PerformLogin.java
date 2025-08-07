@@ -7,7 +7,7 @@ import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import com.geekcatalog.api.domain.auditLogLogin.LoginStatus;
 import com.geekcatalog.api.domain.auditLogLogin.useCase.RegisterAuditLog;
 import com.geekcatalog.api.infra.security.TokenService;
-
+import com.geekcatalog.api.service.RefreshTokenLogService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+
 @Component
 @RequiredArgsConstructor
 public class PerformLogin {
@@ -25,6 +27,7 @@ public class PerformLogin {
     private final RegisterAuditLog registerAuditLog;
     private final UpdateUserFailedLogin updateUserFailedLogin;
     private final UserValidator validator;
+    private final RefreshTokenLogService refreshTokenLogService;
 
     @Transactional
     public AuthTokensDTO login(UserSignInDTO data, HttpServletRequest request) {
@@ -39,10 +42,24 @@ public class PerformLogin {
             userAuthenticated.resetAccessCount();
 
             String accessToken = tokenService.generateAccessToken(userAuthenticated);
-            String refreshToken = null;
-            if (userAuthenticated.isRefreshTokenEnabled()) {
-                refreshToken = tokenService.generateRefreshToken(userAuthenticated);
-            }
+            String refreshToken = tokenService.generateRefreshToken(userAuthenticated);
+
+            var refreshClaims = tokenService.parseClaims(refreshToken);
+            var refreshTokenId = refreshClaims.getClaim("refreshId").asString();
+            var issuedAt = refreshClaims.getIssuedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+            var expiresAtClaim = refreshClaims.getExpiresAt();
+            var expiresAt = (expiresAtClaim != null)
+                    ? expiresAtClaim.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                    : null;
+
+            refreshTokenLogService.register(
+                    userAuthenticated,
+                    refreshTokenId,
+                    issuedAt,
+                    expiresAt,
+                    request
+            );
 
             registerAuditLog.logLogin(
                     data.login(),
