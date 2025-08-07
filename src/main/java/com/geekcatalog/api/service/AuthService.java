@@ -17,7 +17,6 @@ public class AuthService {
     private final GetUserByTokenJWT getUserByTokenJWT;
     private final PerformLogin performLogin;
     private final ResetPassword resetPassword;
-    private final UpdateUser updateUser;
 
     public void deleteUser(String userId) {
         deleteUser.deleteUser(userId);
@@ -39,7 +38,5 @@ public class AuthService {
         return performLogin.login(data, request);
     }
 
-    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
-        return updateUser.updateUserInfo(dto, tokenJWT);
-    }
+
 }

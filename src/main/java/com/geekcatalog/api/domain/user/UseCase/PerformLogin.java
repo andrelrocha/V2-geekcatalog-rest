@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class PerformLogin {
-
     private final AuthenticationManager manager;
     private final TokenService tokenService;
     private final RegisterAuditLog registerAuditLog;

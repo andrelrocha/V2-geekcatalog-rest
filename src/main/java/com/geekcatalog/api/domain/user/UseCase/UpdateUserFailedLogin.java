@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -14,16 +15,12 @@ import java.time.ZoneId;
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class UpdateUserFailedLogin {
-
     private static final int MAX_ATTEMPTS = 5;
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RegisterAuditLog registerAuditLog;
-    @Autowired
-    private TaskScheduler taskScheduler;
+    private final UserRepository userRepository;
+    private final TaskScheduler taskScheduler;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateFailedLogin(String login) {

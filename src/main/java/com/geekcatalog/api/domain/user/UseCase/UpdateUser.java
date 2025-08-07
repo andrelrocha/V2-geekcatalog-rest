@@ -1,52 +1,51 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.domain.country.Country;
 import com.geekcatalog.api.domain.user.User;
+import com.geekcatalog.api.domain.user.UserRepository;
+import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.dto.user.UserUpdateDTO;
+import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.service.EntityHandlerService;
 import com.geekcatalog.api.service.UserRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.country.Country;
-import com.geekcatalog.api.domain.user.UserRepository;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@RequiredArgsConstructor
 public class UpdateUser {
-    @Autowired
-    private GetUserByTokenJWT getUserByTokenJWT;
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private EntityHandlerService entityHandlerService;
-    @Autowired
-    private UserRoleService userRoleService;
+    private final UserRepository repository;
+    private final EntityHandlerService entityHandlerService;
+    private final UserRoleService userRoleService;
+    private final UserValidator userValidator;
 
-    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
-        var userDTO = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
+    @Transactional
+    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String userId) {
+        userValidator.validateUpdateUser(dto);
 
-        var user = findUserById(userDTO.id());
+        var user = findUserById(userId);
 
         Country country = null;
-        if (!(dto.countryId().isEmpty() || dto.countryId().isBlank())) {
+        if (dto.countryId() != null && !dto.countryId().isBlank()) {
             country = entityHandlerService.getCountryById(dto.countryId());
         }
 
         user.updateUser(dto, country);
-
         var userUpdated = repository.save(user);
 
-        if (!dto.rolesId().isEmpty()) {
+        if (dto.rolesId() != null && !dto.rolesId().isEmpty()) {
             userRoleService.updateRoles(dto.rolesId(), userUpdated.getId());
         }
 
         userUpdated = findUserById(userUpdated.getId());
-
         return new UserReturnDTO(userUpdated);
     }
 
     private User findUserById(String userId) {
         return repository.findById(userId)
-                .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
+                .orElseThrow(() -> new ValidationException("No User was found for the provided ID, even tough its ID was checked beforehand."));
     }
 }

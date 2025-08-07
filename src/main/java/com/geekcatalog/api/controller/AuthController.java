@@ -50,12 +50,7 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/user/me")
-    public ResponseEntity<ApiResponseDTO<UserReturnDTO>> updateUser(@RequestHeader("Authorization") String authorizationHeader, @RequestBody UserUpdateDTO data) {
-        var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
-        var updatedUser = authService.updateUserInfo(data, tokenJWT);
-        return ResponseEntity.ok(ApiResponseDTO.success(updatedUser));
-    }
+
 
     @GetMapping("/user/me")
     public ResponseEntity<ApiResponseDTO<UserReturnDTO>> getUserByTokenJWT(@RequestHeader("Authorization") String authorizationHeader) {
