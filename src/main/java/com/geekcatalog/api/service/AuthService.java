@@ -35,8 +35,8 @@ public class AuthService {
         return resetPassword.resetPassword(data);
     }
 
-    public AuthTokensDTO signIn(UserLoginDTO data, HttpServletRequest request) {
-        return performLogin.performLogin(data, request);
+    public AuthTokensDTO signIn(UserSignInDTO data, HttpServletRequest request) {
+        return performLogin.login(data, request);
     }
 
     public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {

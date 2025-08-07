@@ -21,6 +21,15 @@ public class UserValidator {
         }
     }
 
+    public void validateCredentialsInformed(String login, String password) {
+        if (login == null || login.trim().isEmpty()) {
+            throw new ValidationException("Login field can't be empty.");
+        }
+        if (password == null || password.trim().isEmpty()) {
+            throw new ValidationException("Password field can't be empty.");
+        }
+    }
+
     public void validateUserId(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             throw new ValidationException("ID must be informed.");
