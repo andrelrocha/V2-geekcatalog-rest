@@ -1,16 +1,45 @@
 package com.geekcatalog.api.service;
 
+import com.geekcatalog.api.domain.user.UseCase.*;
 import com.geekcatalog.api.dto.user.*;
 import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-public interface AuthService {
-    void deleteUser(String userId);
-    MessageResponseDTO forgotPassword(UserOnlyEmailDTO data);
-    UserPublicReturnDTO getPublicInfoByUserId(String userId);
-    MessageResponseDTO resetPassword(UserResetPassDTO data);
-    AuthTokensDTO signIn(UserLoginDTO data, HttpServletRequest request);
-    UserReturnDTO signUp(UserDTO data);
-    UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT);
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+    private final DeleteUser deleteUser;
+    private final ForgotPassword forgotPassword;
+    private final GetPublicInfo getPublicInfo;
+    private final GetUserByTokenJWT getUserByTokenJWT;
+    private final PerformLogin performLogin;
+    private final ResetPassword resetPassword;
+    private final UpdateUser updateUser;
+
+    public void deleteUser(String userId) {
+        deleteUser.deleteUser(userId);
+    }
+
+    public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
+        return forgotPassword.forgotPassword(data);
+    }
+
+    public UserPublicReturnDTO getPublicInfoByUserId(String userId) {
+        return getPublicInfo.getPublicInfoByUserId(userId);
+    }
+
+    public MessageResponseDTO resetPassword(UserResetPassDTO data) {
+        return resetPassword.resetPassword(data);
+    }
+
+    public AuthTokensDTO signIn(UserLoginDTO data, HttpServletRequest request) {
+        return performLogin.performLogin(data, request);
+    }
+
+    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
+        return updateUser.updateUserInfo(dto, tokenJWT);
+    }
 }

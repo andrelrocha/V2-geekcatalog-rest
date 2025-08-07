@@ -8,6 +8,7 @@ import com.geekcatalog.api.dto.user.UserDTO;
 import com.geekcatalog.api.dto.userRole.CreateUserRoleLoadDTO;
 import com.geekcatalog.api.service.EntityHandlerService;
 import com.geekcatalog.api.service.UserRoleService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ public class CreateUser {
     private final UserRoleService userRoleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserReturnDTO signUp(UserDTO data) {
+    @Transactional
+    public UserReturnDTO create(UserDTO data) {
         validator.validateSignUp(data);
 
         var country = entityHandlerService.getCountryById(data.countryId());

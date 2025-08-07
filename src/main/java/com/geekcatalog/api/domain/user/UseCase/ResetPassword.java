@@ -1,5 +1,8 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.domain.user.validation.UserValidator;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -11,23 +14,21 @@ import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import java.time.LocalDateTime;
 
 @Component
+@AllArgsConstructor
 public class ResetPassword {
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
+    private final UserValidator validator;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    @Transactional
     public MessageResponseDTO resetPassword(UserResetPassDTO data) {
         try {
-            var userExists = repository.existsByEmail(data.email());
-
-            if (!userExists) {
-                throw new ValidationException("No user was found for the provided login");
-            }
+            System.out.println("chamando no use case");
+            validator.validateEmailExists(data.email());
 
             var user = repository.findByEmailToHandle(data.email());
             var tokenMail = user.getTokenMail();
+
             var tokenExpiration = user.getTokenExpiration();
             var now = LocalDateTime.now();
 

@@ -1,10 +1,10 @@
 package com.geekcatalog.api.dto.user;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 
 public record UserLoginDTO(
-        @NotNull
+        @NotEmpty
         String login,
-        @NotNull
+        @NotEmpty
         String password
 ) {  }

@@ -38,9 +38,9 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/country/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/countries/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/auth/public/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/users").permitAll();
                     req.anyRequest().authenticated();
                     /*req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/oauth/**").permitAll();

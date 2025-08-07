@@ -1,18 +1,13 @@
 package com.geekcatalog.api.controller;
 
 import com.geekcatalog.api.dto.user.*;
-import com.geekcatalog.api.dto.utils.AccessTokenDTO;
 import com.geekcatalog.api.dto.utils.ApiResponseDTO;
+import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import com.geekcatalog.api.infra.utils.httpCookies.CookieManager;
 import com.geekcatalog.api.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +19,18 @@ public class AuthController {
     private final AuthService authService;
     private final CookieManager cookieManager;
 
+    @PostMapping("/password/forgot")
+    public ResponseEntity<ApiResponseDTO<MessageResponseDTO>> forgotPassword(@RequestBody @Valid UserOnlyEmailDTO data) {
+        var messageResponseDTO = authService.forgotPassword(data);
+        return ResponseEntity.ok(ApiResponseDTO.success(messageResponseDTO));
+    }
+
+    @PostMapping("/password/reset")
+    public ResponseEntity<ApiResponseDTO<MessageResponseDTO>> resetPassword(@RequestBody @Valid UserResetPassDTO data) {
+        var messageResponseDTO = authService.resetPassword(data);
+        return ResponseEntity.ok(ApiResponseDTO.success(messageResponseDTO));
+    }
+    /*
     @DeleteMapping("/user/{id}")
     @Transactional
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
@@ -31,7 +38,6 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    /*
     @PutMapping("/user/me")
     public ResponseEntity<ApiResponseDTO<UserReturnDTO>> updateUser(@RequestHeader("Authorization") String authorizationHeader, @RequestBody UserUpdateDTO data) {
         var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
@@ -46,27 +52,13 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponseDTO.success(user));
     }
 
-     */
-
     @GetMapping("/user/public/{userId}")
     public ResponseEntity<ApiResponseDTO<UserPublicReturnDTO>> getUserPublicInfo(@PathVariable String userId) {
         var user = authService.getPublicInfoByUserId(userId);
         return ResponseEntity.ok(ApiResponseDTO.success(user));
     }
 
-    @PostMapping("/password/forgot")
-    @Transactional
-    public ResponseEntity<ApiResponseDTO<String>> forgotPassword(@RequestBody @Valid UserOnlyEmailDTO data) {
-        var messageResponseDTO = authService.forgotPassword(data);
-        return ResponseEntity.ok(ApiResponseDTO.success(messageResponseDTO.message()));
-    }
 
-    @PostMapping("/password/reset")
-    @Transactional
-    public ResponseEntity<ApiResponseDTO<String>> resetPassword(@RequestBody @Valid UserResetPassDTO data) {
-        var messageResponseDTO = authService.resetPassword(data);
-        return ResponseEntity.ok(ApiResponseDTO.success(messageResponseDTO.message()));
-    }
 
     @PostMapping("/signin")
     @Transactional
@@ -79,11 +71,7 @@ public class AuthController {
         }
         return ResponseEntity.ok(ApiResponseDTO.success(new AccessTokenDTO(tokensJwt.accessToken())));
     }
+    */
 
-    @PostMapping("/user")
-    @Transactional
-    public ResponseEntity<ApiResponseDTO<UserReturnDTO>> signUp(@RequestBody @Valid UserDTO data) {
-        var newUserDTO = authService.signUp(data);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseDTO.success(newUserDTO));
-    }
+
 }

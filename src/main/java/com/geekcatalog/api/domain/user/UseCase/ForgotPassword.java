@@ -1,9 +1,12 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.user.UserOnlyEmailDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;
 import com.geekcatalog.api.infra.utils.mail.*;
 import com.geekcatalog.api.dto.utils.MailDTO;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,30 +18,25 @@ import com.geekcatalog.api.domain.user.UserRepository;
 import java.time.LocalDateTime;
 
 @Component
+@AllArgsConstructor
 public class ForgotPassword {
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private GenerateTokenForgetPassword mailToken;
-    @Autowired
-    private MailSenderMime mailSender;
+    private final UserRepository repository;
+    private final UserValidator validator;
+    private final GenerateTokenForgetPassword mailToken;
+    private final MailSenderMime mailSender;
 
+    @Transactional
     public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
-        var email = data.email();
-        var userExists = repository.existsByEmail(email);
-
-        if (!userExists) {
-            throw new ValidationException("No user was found for the provided login");
-        }
+        validator.validateEmailExists(data.email());
 
         var token = mailToken.generateEmailToken();
         var inOneHour = LocalDateTime.now().plusHours(1);
         var forgotDTO = new UserForgotDTO(token, inOneHour);
 
-        var user = repository.findByEmailToHandle(email);
+        var user = repository.findByEmailToHandle(data.email());
         user.forgotPassword(forgotDTO);
 
-        var mailDTO = getMailDTO(email, token);
+        var mailDTO = getMailDTO(data.email(), token);
 
         try {
             mailSender.sendMail(mailDTO);

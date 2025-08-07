@@ -30,4 +30,14 @@ public class UserValidator {
             throw new ValidationException("No User was found for the provided ID.");
         }
     }
+
+    public void validateEmailExists(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new ValidationException("Email must be informed.");
+        }
+
+        if (!repository.existsByEmail(email)) {
+            throw new ValidationException("No user was found for the provided email.");
+        }
+    }
 }
