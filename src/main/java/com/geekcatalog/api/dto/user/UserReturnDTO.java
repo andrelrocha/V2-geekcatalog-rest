@@ -2,6 +2,7 @@ package com.geekcatalog.api.dto.user;
 
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.userRole.UserRole;
+import com.geekcatalog.api.dto.userRole.UserRoleReturnDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,7 +41,7 @@ public record UserReturnDTO(
         );
     }
 
-    public UserReturnDTO(User user, List<UserRole> roles) {
+    public UserReturnDTO(User user, List<UserRoleReturnDTO> roles) {
         this(
                 user.getId(),
                 user.getEmail(),
@@ -53,8 +54,8 @@ public record UserReturnDTO(
                 user.isTwoFactorEnabled(),
                 user.getTheme() != null ? user.getTheme().name() : null,
                 user.getProfilePicUrl(),
-                roles.stream().map(ur -> ur.getRole().getId()).collect(Collectors.toList()),
-                roles.stream().map(ur -> ur.getRole().getName()).collect(Collectors.toList())
+                roles.stream().map(UserRoleReturnDTO::roleId).collect(Collectors.toList()),
+                roles.stream().map(UserRoleReturnDTO::roleName).collect(Collectors.toList())
         );
     }
 }

@@ -1,5 +1,7 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.domain.user.validation.UserValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -10,32 +12,31 @@ import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
-import java.util.UUID;
-
 @Component
+@AllArgsConstructor
 public class DeleteUser {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private GetUserByTokenJWT getUserByTokenJWT;
-    @Autowired
+    private final UserRepository repository;
+    private final UserValidator validator;
+    private final TransactionTemplate transactionTemplate;
+
+    /*@Autowired
     private GameListRepository gameListRepository;
     @Autowired
     private GameRatingRepository gameRatingRepository;
     @Autowired
     private ListPermissionUserRepository listPermissionUserRepository;
     @Autowired
-    private ListAppRepository listAppRepository;
-    @Autowired
-    private TransactionTemplate transactionTemplate;
+    private ListAppRepository listAppRepository; */
 
-    public void deleteUser(String tokenJWT) {
-        var userDTO = getUserByTokenJWT.getUserByID(tokenJWT);
-        var user = userRepository.findById(userDTO.id())
-                .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
+    public void deleteUser(String userId) {
+        validator.validateUserId(userId);
+
+        var user = repository.findById(userId)
+                .orElseThrow(() -> new ValidationException("User should exist after ID validation, but no User was found for the provided ID."));
 
         transactionTemplate.execute(status -> {
             try {
+                /*
                 var gameListsToDelete = gameListRepository.findAllByUserId(user.getId());
                 var gameRatingsToDelete = gameRatingRepository.findAllByUserId(user.getId());
                 var listsPermissionUserToDelete = listPermissionUserRepository.findAllByUserId(user.getId());
@@ -56,12 +57,12 @@ public class DeleteUser {
                 }
                 if (!listsAppToDelete.isEmpty()) {
                     listAppRepository.deleteAll(listsAppToDelete);
-                }
+                }*/
 
-                userRepository.delete(user);
+                repository.delete(user);
             } catch (Exception e) {
                 status.setRollbackOnly();
-                throw new RuntimeException("An error occurred during the delete transaction of the game and its related entities", e);
+                throw new RuntimeException("An error occurred during the delete transaction of an user", e);
             }
             return null;
         });

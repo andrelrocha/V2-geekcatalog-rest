@@ -1,6 +1,7 @@
 package com.geekcatalog.api.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+
+import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -35,9 +38,11 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/country/**").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/user/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/countries/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/users").permitAll();
+                    req.anyRequest().authenticated();
+                    /*req.requestMatchers(HttpMethod.GET, "/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/oauth/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/view/signin/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/infra/verifyjwt/**").permitAll();
@@ -64,7 +69,7 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.DELETE, "/gamegenre/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.PUT, "/gamegenre/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.POST, "/gamegenre/**").hasRole("ADMIN");
-                    req.anyRequest().authenticated();
+                     */
                 })
                 .addFilterBefore(securityFilterApplication, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -81,11 +86,11 @@ public class SecurityConfigurations {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsFilter corsFilter(@Value("${CORS_ALLOWED_ORIGINS:${cors.allowed-origins}}") String allowedOrigins) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
+        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
         config.addAllowedHeader("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("GET");

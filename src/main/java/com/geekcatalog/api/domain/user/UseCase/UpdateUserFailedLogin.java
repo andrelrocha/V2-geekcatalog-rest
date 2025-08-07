@@ -5,7 +5,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import com.geekcatalog.api.domain.auditLog.useCase.RegisterAuditLog;
+import com.geekcatalog.api.domain.auditLogLogin.useCase.RegisterAuditLog;
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;

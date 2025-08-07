@@ -1,21 +1,18 @@
 package com.geekcatalog.api.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record UserDTO(
-
-        @NotNull
+        @NotEmpty
         @Email(message = "Invalid email address")
         String email,
 
-        @NotNull
+        @NotEmpty
         @Size(min = 8, message = "Password must be at least 8 characters long")
         @Pattern(
                 regexp = "^(?=.*[A-Z])(?=.*\\d).*$",
@@ -23,11 +20,11 @@ public record UserDTO(
         )
         String password,
 
-        @NotNull
+        @NotEmpty
         String name,
 
+        @NotEmpty
         @Size(max = 20, message = "Username must have at most 20 characters")
-        @NotNull
         String username,
 
         @Pattern(
@@ -36,14 +33,18 @@ public record UserDTO(
         )
         String phone,
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
-        @DateTimeFormat(pattern = "dd/MM/yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate birthday,
 
+        @NotEmpty
         String countryId,
 
         Boolean twoFactorEnabled,
         Boolean refreshTokenEnabled,
 
-        String theme
+        String theme,
+
+        @NotEmpty(message = "At least one role must be informed.")
+        List<@NotBlank(message = "Role list can't be blank.") String> rolesName
 ) {}

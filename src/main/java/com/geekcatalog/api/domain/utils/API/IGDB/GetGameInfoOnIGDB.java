@@ -1,11 +1,12 @@
 package com.geekcatalog.api.domain.utils.API.IGDB;
 
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.*;
 import com.geekcatalog.api.domain.utils.API.IGDB.utils.FormatGameName;
 import com.geekcatalog.api.domain.utils.API.IGDB.utils.queries.*;
+import com.geekcatalog.api.dto.utils.api.IGDB.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
+@AllArgsConstructor
 public class GetGameInfoOnIGDB {
     @Autowired
     private FormatGameName formatGameName;
@@ -54,7 +56,7 @@ public class GetGameInfoOnIGDB {
             var gameResponse = getGameInfoByName.fetchGameDetailsFromIGDB(gameName, headers);
 
             if (gameResponse.getBody() != null && !gameResponse.getBody().isEmpty()) {
-                GameInfo gameInfo = gameResponse.getBody().get(0);
+                GameInfo gameInfo = gameResponse.getBody().getFirst();
 
                 var gameNameResponse = gameInfo.name();
 

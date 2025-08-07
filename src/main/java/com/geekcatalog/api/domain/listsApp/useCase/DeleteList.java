@@ -33,7 +33,7 @@ public class DeleteList {
         var listApp = repository.findById(listIdUUID)
                 .orElseThrow(() -> new ValidationException("No List was found for the provided id while deleting it."));
 
-        var user = getUserByTokenJWT.getUserByID(tokenJWT);
+        var user = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
         var userId = user.id();
 
         var errorMessagePermission = "The user attempting to edit the list is neither the owner nor has the required permission for this operation.";

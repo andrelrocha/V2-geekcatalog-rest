@@ -1,58 +1,52 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
+import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
+import com.geekcatalog.api.dto.user.UserUpdateDTO;
+import com.geekcatalog.api.service.EntityHandlerService;
+import com.geekcatalog.api.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.country.Country;
-import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.domain.user.DTO.UserGetInfoUpdateDTO;
-import com.geekcatalog.api.domain.user.DTO.UserUpdateDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
-import com.geekcatalog.api.infra.security.TokenService;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Component
 public class UpdateUser {
     @Autowired
+    private GetUserByTokenJWT getUserByTokenJWT;
+    @Autowired
     private UserRepository repository;
     @Autowired
-    private CountryRepository countryRepository;
+    private EntityHandlerService entityHandlerService;
     @Autowired
-    private TokenService tokenService;
+    private UserRoleService userRoleService;
 
-    public UserReturnDTO updateUserInfo(UserGetInfoUpdateDTO dto, String tokenJWT) {
+    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
+        var userDTO = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
 
-        var userId = tokenService.getIdClaim(tokenJWT);
-        userId = userId.replaceAll("\"", "");
-
-        var user = repository.findByIdToHandle(userId);
-
-        if (user == null) {
-            throw new ValidationException("No User was found for the provided ID.");
-        }
+        var user = findUserById(userDTO.id());
 
         Country country = null;
-        if (dto.countryId() != null) {
-            country = countryRepository.findById(dto.countryId())
-                    .orElseThrow(() -> new ValidationException("No country was found fot the informed ID, during user update."));
+        if (!(dto.countryId().isEmpty() || dto.countryId().isBlank())) {
+            country = entityHandlerService.getCountryById(dto.countryId());
         }
 
-        LocalDate formattedBirthday = null;
-        if (dto.birthday() != null) {
-            var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            formattedBirthday = LocalDate.parse(dto.birthday().format(formatter));
-        }
-
-        var data = new UserUpdateDTO(dto.name(), dto.username(), dto.twoFactorEnabled(), dto.refreshTokenEnabled(), dto.phone(), formattedBirthday, country, dto.theme());
-
-        user.updateUser(data);
+        user.updateUser(dto, country);
 
         var userUpdated = repository.save(user);
 
+        if (!dto.rolesId().isEmpty()) {
+            userRoleService.updateRoles(dto.rolesId(), userUpdated.getId());
+        }
+
+        userUpdated = findUserById(userUpdated.getId());
+
         return new UserReturnDTO(userUpdated);
+    }
+
+    private User findUserById(String userId) {
+        return repository.findById(userId)
+                .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
     }
 }

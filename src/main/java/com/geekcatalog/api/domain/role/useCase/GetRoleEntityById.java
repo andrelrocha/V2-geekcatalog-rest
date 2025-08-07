@@ -11,8 +11,8 @@ public class GetRoleEntityById {
     @Autowired
     private RoleRepository repository;
 
-    public Role getRoleEntityById(String id) {
+    public Role getRoleById(String id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ValidationException("No role was found from the ID provided."));
+                .orElseThrow(() -> new ValidationException("No role was found from the provided ID."));
     }
 }

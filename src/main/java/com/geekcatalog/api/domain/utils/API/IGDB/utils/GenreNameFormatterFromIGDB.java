@@ -7,6 +7,7 @@ import java.util.List;
 
 import static com.geekcatalog.api.infra.utils.stringFormatter.StringFormatter.normalizeString;
 
+
 @Component
 public class GenreNameFormatterFromIGDB {
     public List<String> normalizeAndConvertNames(List<String> genres) {

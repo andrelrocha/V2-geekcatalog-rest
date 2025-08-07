@@ -1,9 +1,8 @@
 package com.geekcatalog.api.domain.user;
 
 import com.geekcatalog.api.domain.role.Role;
-import com.geekcatalog.api.domain.user.DTO.*;
+import com.geekcatalog.api.dto.user.*;
 import com.geekcatalog.api.domain.userRole.UserRole;
-import com.geekcatalog.api.dto.user.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -159,15 +158,10 @@ public class User implements UserDetails {
         this.tokenExpiration = data.tokenExpiration();
     }
 
-    public void updateUser(UserUpdateDTO data) {
-        if (data.name() != null ) {
+    public void updateUser(UserUpdateDTO data, Country country) {
+        if (data.name() != null && !data.name().isEmpty()) {
             this.name = data.name();
         }
-
-        /*
-        if (data.username() != null) {
-            this.username = data.username();
-        } */
 
         if (data.phone() != null) {
             this.phone = data.phone();
@@ -189,8 +183,8 @@ public class User implements UserDetails {
             this.theme = UserTheme.valueOf(data.theme());
         }
 
-        if (data.country() != null) {
-            this.country = data.country();
+        if (country != null) {
+            this.country = country;
         }
     }
 
@@ -214,6 +208,4 @@ public class User implements UserDetails {
     public void updateCountry(Country country) {
         this.country = country;
     }
-
-    public void updateBirthday(LocalDate date) { this.birthday = date; }
 }

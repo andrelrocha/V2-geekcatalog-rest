@@ -2,67 +2,59 @@ package com.geekcatalog.api.domain.user.UseCase;
 
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
+import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.dto.userRole.CreateUserRoleLoadDTO;
+import com.geekcatalog.api.service.EntityHandlerService;
+import com.geekcatalog.api.service.UserRoleService;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.country.CountryRepository;
-import com.geekcatalog.api.dto.user.UserDTO;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class CreateUser {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CountryRepository countryRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository repository;
+    private final UserValidator validator;
+    private final EntityHandlerService entityHandlerService;
+    private final UserRoleService userRoleService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserReturnDTO createUser(UserDTO data) {
-        /*
-        boolean userExists = userRepository.userExistsByLogin(data.email());
+    @Transactional
+    public UserReturnDTO create(UserDTO data) {
+        validator.validateSignUp(data);
 
-        if (userExists) {
-            throw new ValidationException("Email on user creation already exists in our database");
+        var country = entityHandlerService.getCountryById(data.countryId());
+
+        var newUser = new User(data, country);
+        newUser.setPassword(encodePassword(data.password()));
+
+        var savedUser = repository.save(newUser);
+
+        var roles = data.rolesName();
+        if (roles != null && !roles.isEmpty()) {
+            return assignRolesAndReturn(savedUser, roles);
         }
 
-        var country = countryRepository.findById(data.countryId())
-                .orElseThrow(() -> new ValidationException("No country was found fot the informed ID, during sign up."));
+        return new UserReturnDTO(savedUser);
+    }
 
-        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        var formattedBirthday = LocalDate.parse(data.birthday().format(formatter));
+    private String encodePassword(String password) {
+        return bCryptPasswordEncoder.encode(password);
+    }
 
-        var updatedData = new UserDTO(
-                data.login(),
-                data.password(),
-                data.name(),
-                data.cpf(),
-                data.phone(),
-                formattedBirthday,
-                data.countryId(),
-                data.username(),
-                data.twoFactorEnabled(),
-                data.refreshTokenEnabled(),
-                data.theme()
-        );
+    private UserReturnDTO assignRolesAndReturn(User user, List<String> roles) {
+        var loadDTO = new CreateUserRoleLoadDTO(user.getId(), roles);
+        var userRoles = userRoleService.createUserRoleByLoad(loadDTO);
 
-        var createDTO = new UserCreateDTO(updatedData, country);
-
-        var newUser = new User(createDTO);
-
-        String encodedPassword = bCryptPasswordEncoder.encode(data.password());
-        newUser.setPassword(encodedPassword);
-
-        var userOnDb = userRepository.save(newUser);
-
-        return new UserReturnDTO(userOnDb);
-
-         */
-
-        return null;
+        //apos persistir o usuario, os cargos ainda nao estao carregados em usuario.getUsuarioCargos()
+        //(provavelmente por causa do contexto de persistencia e ausencia de fetch automatico).
+        //para evitar consultas desnecessarias ao banco e garantir que o dto tenha os dados corretos,
+        //utilizo diretamente o retorno da criação da relação que ja traz os cargos vinculados.
+        return new UserReturnDTO(user, userRoles);
     }
 }

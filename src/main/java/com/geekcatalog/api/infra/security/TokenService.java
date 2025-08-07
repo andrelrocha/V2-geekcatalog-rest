@@ -31,11 +31,11 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("geekcatalog-api")
                     .withSubject(user.getEmail())
-                    .withClaim("id", user.getId().toString())
+                    .withClaim("id", user.getId())
                     .withClaim("role", user.getRoles().toString())
                     .withClaim("theme", user.getTheme().toString())
                     .withIssuedAt(Instant.now())
-                    .withExpiresAt(dateExpires())
+                    .withExpiresAt(accessTokenExpirationDate())
                     .sign(algorithm);
 
             return token;
@@ -47,16 +47,19 @@ public class TokenService {
     public String generateRefreshToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(refreshSecret);
-            return JWT.create()
+            var builder = JWT.create()
                     .withIssuer("geekcatalog-api")
                     .withSubject(user.getEmail())
-                    .withClaim("id", user.getId())
                     .withClaim("refreshId", UUID.randomUUID().toString())
-                    .withIssuedAt(Instant.now())
-                    .withExpiresAt(refreshTokenExpirationDate())
-                    .sign(algorithm);
+                    .withIssuedAt(Instant.now());
+
+            if (user.isRefreshTokenEnabled()) {
+                builder.withExpiresAt(refreshTokenExpirationDate());
+            }
+
+            return builder.sign(algorithm);
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Error while generating refresh accessToken", exception);
+            throw new RuntimeException("Erro enquanto gerava o token JWT de persistência (refresh).", exception);
         }
     }
 
@@ -106,20 +109,20 @@ public class TokenService {
     public String getIdClaim(String tokenJwt) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(accessSecret);
-            String userVerifiedId = String.valueOf(JWT.require(algorithm)
+            DecodedJWT decodedJWT = JWT.require(algorithm)
                     .withIssuer("geekcatalog-api")
                     .build()
-                    .verify(tokenJwt)
-                    .getClaim("id"));
+                    .verify(tokenJwt);
 
-            return userVerifiedId;
+            return decodedJWT.getClaim("id").asString();
         } catch (JWTVerificationException exception){
             throw new RuntimeException("Invalid or expired JWT token.");
         }
     }
 
-    private Instant dateExpires() {
-        return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-03:00"));
+
+    private Instant accessTokenExpirationDate() {
+        return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
     }
 
     private Instant refreshTokenExpirationDate() {
