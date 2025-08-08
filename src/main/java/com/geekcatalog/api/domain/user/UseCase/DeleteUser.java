@@ -1,19 +1,15 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
 import com.geekcatalog.api.domain.user.validation.UserValidator;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
-import com.geekcatalog.api.domain.gameList.GameListRepository;
-import com.geekcatalog.api.domain.gameRating.GameRatingRepository;
-import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepository;
-import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DeleteUser {
     private final UserRepository repository;
     private final UserValidator validator;
@@ -28,6 +24,7 @@ public class DeleteUser {
     @Autowired
     private ListAppRepository listAppRepository; */
 
+    @Transactional
     public void deleteUser(String userId) {
         validator.validateUserId(userId);
 

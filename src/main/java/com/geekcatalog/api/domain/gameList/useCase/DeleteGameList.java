@@ -4,14 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.gameList.DTO.DeleteGameListDTO;
 import com.geekcatalog.api.domain.gameList.GameListRepository;
-import com.geekcatalog.api.domain.listsApp.ListApp;
 import com.geekcatalog.api.domain.listsApp.ListAppRepository;
-import com.geekcatalog.api.domain.permission.PermissionEnum;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 import com.geekcatalog.api.domain.gameList.strategy.PermissionValidationFactory;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
-
-import java.util.UUID;
 
 @Component
 public class DeleteGameList {

@@ -6,7 +6,7 @@ import com.geekcatalog.api.domain.listPermissionUser.DTO.ListPermissionUserRetur
 import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepository;
 import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.permission.PermissionRepository;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 import java.util.ArrayList;

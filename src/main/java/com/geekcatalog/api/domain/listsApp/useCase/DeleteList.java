@@ -8,7 +8,7 @@ import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepositor
 import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.permission.PermissionEnum;
 import com.geekcatalog.api.domain.permission.useCase.GetPermissionByNameENUM;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 import java.util.UUID;

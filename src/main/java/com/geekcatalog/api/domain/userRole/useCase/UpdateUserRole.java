@@ -25,7 +25,7 @@ public class UpdateUserRole {
     public void updateRoles(List<String> rolesId, String userId) {
         Set<String> current = getRolesByUserId.getRolesByUserId(userId)
                 .stream()
-                .map(UserRoleReturnDTO::roleId)
+                .map(ur -> ur.role().id())
                 .collect(Collectors.toSet());
 
         Set<String> toBeDeleted = new HashSet<>(rolesId);

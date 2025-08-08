@@ -1,34 +1,26 @@
 package com.geekcatalog.api.service;
 
-import com.geekcatalog.api.domain.user.UseCase.*;
+import com.geekcatalog.api.domain.user.useCase.*;
 import com.geekcatalog.api.dto.user.*;
 import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;
+import com.geekcatalog.api.dto.utils.TokenDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final DeleteUser deleteUser;
     private final ForgotPassword forgotPassword;
-    private final GetPublicInfo getPublicInfo;
-    private final GetUserByTokenJWT getUserByTokenJWT;
     private final PerformLogin performLogin;
     private final ResetPassword resetPassword;
-    private final UpdateUser updateUser;
-
-    public void deleteUser(String userId) {
-        deleteUser.deleteUser(userId);
-    }
+    private final RefreshAccessTokenIfUserIsEnabled refreshAccessTokenIfUserIsEnabled;
+    private final PerformLogout performLogout;
 
     public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
         return forgotPassword.forgotPassword(data);
-    }
-
-    public UserPublicReturnDTO getPublicInfoByUserId(String userId) {
-        return getPublicInfo.getPublicInfoByUserId(userId);
     }
 
     public MessageResponseDTO resetPassword(UserResetPassDTO data) {
@@ -39,7 +31,11 @@ public class AuthService {
         return performLogin.login(data, request);
     }
 
-    public UserReturnDTO updateUserInfo(UserUpdateDTO dto, String tokenJWT) {
-        return updateUser.updateUserInfo(dto, tokenJWT);
+    public TokenDTO refreshAccessToken(String refreshToken) {
+        return refreshAccessTokenIfUserIsEnabled.updateToken(refreshToken);
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        performLogout.logout(request, response);
     }
 }
