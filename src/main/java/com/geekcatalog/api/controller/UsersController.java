@@ -44,4 +44,10 @@ public class UsersController {
         var userPublicInfo = service.getPublicInfoByUserId(userId);
         return ResponseEntity.ok(ApiResponseDTO.success(userPublicInfo));
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+        service.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
 }
