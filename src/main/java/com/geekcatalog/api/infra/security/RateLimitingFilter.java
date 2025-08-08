@@ -32,7 +32,7 @@ public class RateLimitingFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             httpResponse.setStatus(429);
-            httpResponse.getWriter().write("Limite de requisições excedido. Tente novamente mais tarde.");
+            httpResponse.getWriter().write("Limit of requests exceeded. Please try again later.");
         }
     }
 

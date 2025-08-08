@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.utils.API.IGDB.utils.queries;
 
+import com.geekcatalog.api.dto.utils.api.IGDB.GenreInfo;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.GenreInfo;
 
 import java.util.ArrayList;
 import java.util.List;

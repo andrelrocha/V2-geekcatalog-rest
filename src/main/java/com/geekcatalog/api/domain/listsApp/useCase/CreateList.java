@@ -20,14 +20,13 @@ public class CreateList {
     private UserRepository userRepository;
 
     public ListAppReturnDTO createListApp(ListAppDTO data) {
-        var userIdUUID = UUID.fromString(data.userId());
-        var existsByNameAndUserId = listAppRepository.existsByName(data.name(), userIdUUID);
+        var existsByNameAndUserId = listAppRepository.existsByName(data.name(), data.userId());
 
         if (existsByNameAndUserId) {
             throw new ValidationException("A list with this name already exists.");
         }
 
-        var user = userRepository.findByIdToHandle(userIdUUID);
+        var user = userRepository.findByIdToHandle(data.userId());
 
         if (user == null) {
             throw new ValidationException("No user was found with the provided ID during the list creation process.");

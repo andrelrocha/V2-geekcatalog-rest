@@ -1,29 +1,27 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.geekcatalog.api.domain.user.validation.UserValidator;
+import com.geekcatalog.api.dto.user.UserReturnDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.infra.security.TokenService;
 
-import java.util.UUID;
-
 @Component
+@RequiredArgsConstructor
 public class GetUserByTokenJWT {
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private TokenService tokenService;
+    private final UserRepository repository;
+    private final UserValidator validator;
+    private final TokenService tokenService;
 
-    public UserReturnDTO getUserByID(String tokenJWT) {
+    public UserReturnDTO getUserByIdClaim(String tokenJWT) {
         var userId = tokenService.getIdClaim(tokenJWT);
-        userId = userId.replaceAll("\"", "");
 
-        var uuid = UUID.fromString(userId);
+        validator.validateUserId(userId);
 
-        var user = repository.findById(uuid)
-                .orElseThrow(() -> new ValidationException("No user was foud for the provided ID."));
+        var user = repository.findById(userId)
+                .orElseThrow(() -> new ValidationException("No user was found for the provided ID, even tough its ID was validated."));
 
         return new UserReturnDTO(user);
     }

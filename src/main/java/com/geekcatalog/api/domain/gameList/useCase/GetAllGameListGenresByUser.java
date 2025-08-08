@@ -1,5 +1,7 @@
 package com.geekcatalog.api.domain.gameList.useCase;
 
+import com.geekcatalog.api.domain.user.UserRepository;
+import com.geekcatalog.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
@@ -9,7 +11,6 @@ import com.geekcatalog.api.domain.gameGenre.GameGenre;
 import com.geekcatalog.api.domain.gameGenre.GameGenreRepository;
 import com.geekcatalog.api.domain.gameList.GameListRepository;
 import com.geekcatalog.api.domain.genres.DTO.GenreCountDTO;
-import com.geekcatalog.api.domain.user.UseCase.GetUserIdByJWT;
 
 import java.util.*;
 
@@ -18,14 +19,18 @@ public class GetAllGameListGenresByUser {
     @Autowired
     private GameListRepository gameListRepository;
     @Autowired
-    private GetUserIdByJWT getUserIdByJWT;
-    @Autowired
     private GameGenreRepository gameGenreRepository;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private UserRepository userRepository;
 
     public Page<GenreCountDTO> getAllGameListGenresByUserId(String tokenJWT, Pageable pageable) {
-        var user = getUserIdByJWT.getUserByJWT(tokenJWT);
+        var userId = tokenService.getIdClaim(tokenJWT);
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found during the process of deleting a game comment."));
 
-        var gameListsByUser = gameListRepository.findAllByUserId(UUID.fromString(user.userId()));
+        var gameListsByUser = gameListRepository.findAllByUserId(user.getId());
 
         var pageableGenres = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted());
 

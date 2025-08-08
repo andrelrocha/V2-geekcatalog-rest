@@ -10,7 +10,6 @@ import com.geekcatalog.api.domain.gameList.auxService.GameListEntityExtractorSer
 import com.geekcatalog.api.domain.gameList.strategy.PermissionValidationFactory;
 import com.geekcatalog.api.domain.gameList.strategy.PermissionValidationStrategy;
 import com.geekcatalog.api.domain.permission.PermissionEnum;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
 
 
 @Component
@@ -26,6 +25,7 @@ public class UpdateGameList {
     private PermissionValidationFactory permissionValidationFactory;
 
     public GameListFullReturnDTO updateGameList(GameListUpdateRequestDTO data, String gameListId) {
+        /*
         var gameList = gameListEntityExtractorServiceImpl.extractGameList(gameListId);
 
         var userReturnDTO = new UserReturnDTO(gameList.getList().getUser());
@@ -40,5 +40,9 @@ public class UpdateGameList {
         var gameListUpdated = gameListRepository.save(gameList);
 
         return new GameListFullReturnDTO(gameListUpdated);
+
+         */
+
+        return null;
     }
 }

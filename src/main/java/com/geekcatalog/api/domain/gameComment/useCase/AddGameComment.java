@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.gameComment.useCase;
 
+import com.geekcatalog.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.game.GameRepository;
@@ -8,7 +9,6 @@ import com.geekcatalog.api.domain.gameComment.DTO.GameCommentDTO;
 import com.geekcatalog.api.domain.gameComment.DTO.GameCommentReturnDTO;
 import com.geekcatalog.api.domain.gameComment.GameComment;
 import com.geekcatalog.api.domain.gameComment.GameCommentRepository;
-import com.geekcatalog.api.domain.user.UseCase.GetUserIdByJWT;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
@@ -19,19 +19,18 @@ public class AddGameComment {
     @Autowired
     private GameCommentRepository gameCommentRepository;
     @Autowired
-    private GetUserIdByJWT getUserIdByJWT;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private TokenService tokenService;
 
     public GameCommentReturnDTO addGameComment(CreateGameCommentDTO data, String tokenJWT) {
-        var user = getUserIdByJWT.getUserByJWT(tokenJWT);
-        if (user == null) {
-            throw new RuntimeException("User not found during the process of adding a game comment.");
-        }
+        var id = tokenService.getIdClaim(tokenJWT);
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found during the process of adding a game comment."));
 
-        var userEntity = userRepository.findByIdToHandle(UUID.fromString(user.userId()));
+        var userEntity = userRepository.findByIdToHandle(user.getId());
 
         var commentExists = gameCommentRepository.gameCommentExists(userEntity.getId(), UUID.fromString(data.gameId()), data.comment());
 

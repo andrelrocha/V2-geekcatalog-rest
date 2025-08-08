@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.GameInfo;
+import com.geekcatalog.api.dto.utils.api.IGDB.GameInfo;
 
 import java.util.List;
 

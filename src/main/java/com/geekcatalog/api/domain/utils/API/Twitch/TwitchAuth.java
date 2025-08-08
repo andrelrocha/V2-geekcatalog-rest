@@ -1,10 +1,12 @@
 package com.geekcatalog.api.domain.utils.API.Twitch;
 
+import com.geekcatalog.api.dto.utils.api.TwitchAuthResponseDTO;
+import com.geekcatalog.api.dto.utils.api.IGDB.IGDBQueryInfoDTO;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import com.geekcatalog.api.domain.utils.API.IGDB.DTO.IGDBQueryInfoDTO;
 
 import java.util.Objects;
 

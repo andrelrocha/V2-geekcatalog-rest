@@ -12,6 +12,5 @@ CREATE TABLE country (
     country_code VARCHAR(5),                   -- Código telefônico DDI (ex: 55)
     currency_code CHAR(3),                     -- Código da moeda (ex: BRL)
     currency_name VARCHAR(100),                -- Nome da moeda (ex: "Brazilian Real")
-    currency_symbol VARCHAR(10),               -- Símbolo monetário (ex: R$)
-    timezones TEXT[]                          -- Fuso(s) horário(s) (ex: ["UTC−03:00"])
+    currency_symbol VARCHAR(10)                -- Símbolo monetário (ex: R$)
 );

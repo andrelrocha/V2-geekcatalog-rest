@@ -1,28 +1,16 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
+import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.domain.auditLog.LoginStatus;
-import com.geekcatalog.api.domain.auditLog.useCase.RegisterAuditLog;
-import com.geekcatalog.api.domain.authenticationType.AuthenticationTypeRepository;
-import com.geekcatalog.api.domain.user.DTO.UserCreateDTO;
-import com.geekcatalog.api.domain.user.DTO.UserDTO;
-import com.geekcatalog.api.domain.user.User;
+import com.geekcatalog.api.domain.auditLogLogin.useCase.RegisterAuditLog;
 import com.geekcatalog.api.domain.user.UserRepository;
-import com.geekcatalog.api.domain.user.UserTheme;
-import com.geekcatalog.api.domain.userAuthenticationType.DTO.CreateUserAuthenticationTypeDTO;
-import com.geekcatalog.api.domain.userAuthenticationType.UserAuthenticationType;
-import com.geekcatalog.api.domain.userAuthenticationType.UserAuthenticationTypeRepository;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
-import com.geekcatalog.api.infra.security.AuthTokensDTO;
 import com.geekcatalog.api.infra.security.TokenService;
 import com.geekcatalog.api.infra.utils.oauth.GetGoogleUserInfo;
-import com.geekcatalog.api.infra.utils.oauth.GoogleUserInfo;
 
 import java.security.SecureRandom;
-import java.util.UUID;
 
 @Component
 public class AuthenticateGoogleUser {
@@ -30,10 +18,6 @@ public class AuthenticateGoogleUser {
     private static final int PASSWORD_LENGTH = 20;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private AuthenticationTypeRepository authenticationTypeRepository;
-    @Autowired
-    private UserAuthenticationTypeRepository userAuthenticationTypeRepository;
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -44,6 +28,7 @@ public class AuthenticateGoogleUser {
     private RegisterAuditLog registerAuditLog;
 
     public AuthTokensDTO signInGoogleUser(String googleAccessToken, HttpServletRequest request) {
+        /*
         GoogleUserInfo googleUser = getGoogleUserInfo.getGoogleUserInfo(googleAccessToken);
 
         var user = userAuthenticationTypeRepository.findUserByOAuthId(googleUser.sub());
@@ -106,6 +91,8 @@ public class AuthenticateGoogleUser {
         );
 
         return new AuthTokensDTO(accessToken, refreshToken);
+
+         */ return null;
     }
 
     public String generateUniqueUsername(String email) {

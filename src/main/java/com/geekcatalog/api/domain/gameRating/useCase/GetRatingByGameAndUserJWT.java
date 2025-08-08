@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.gameRating.DTO.GameRatingByGameAndJWTDTO;
 import com.geekcatalog.api.domain.gameRating.DTO.GameRatingReturnDTO;
 import com.geekcatalog.api.domain.gameRating.GameRatingRepository;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 
 import java.util.UUID;
 
@@ -19,12 +19,12 @@ public class GetRatingByGameAndUserJWT {
     public GameRatingReturnDTO getRatingByGameAndUser(GameRatingByGameAndJWTDTO data) {
         var gameIdUUID = UUID.fromString(data.gameId());
 
-        var user = getUserByTokenJWT.getUserByID(data.tokenJWT());
+        var user = getUserByTokenJWT.getUserByIdClaim(data.tokenJWT());
 
-        var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, UUID.fromString(user.id()));
+        var gameRating = gameRatingRepository.findByGameIdAndUserId(gameIdUUID, user.id());
 
         if (gameRating == null) {
-            return new GameRatingReturnDTO(gameIdUUID, UUID.fromString(user.id()), user.name(), 0);
+            return new GameRatingReturnDTO(gameIdUUID, user.id(), user.name(), 0);
         }
 
         return new GameRatingReturnDTO(gameRating);

@@ -8,7 +8,7 @@ import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepositor
 import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.permission.PermissionEnum;
 import com.geekcatalog.api.domain.permission.useCase.GetPermissionByNameENUM;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 import java.util.UUID;
@@ -33,17 +33,17 @@ public class DeleteList {
         var listApp = repository.findById(listIdUUID)
                 .orElseThrow(() -> new ValidationException("No List was found for the provided id while deleting it."));
 
-        var user = getUserByTokenJWT.getUserByID(tokenJWT);
-        var userIdUUID = UUID.fromString(user.id());
+        var user = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
+        var userId = user.id();
 
         var errorMessagePermission = "The user attempting to edit the list is neither the owner nor has the required permission for this operation.";
 
-        if (!listApp.getUser().getId().equals(userIdUUID)) {
-            var listsPermission = listPermissionUserRepository.findAllByParticipantIdAndListId(userIdUUID, listApp.getId());
+        if (!listApp.getUser().getId().equals(userId)) {
+            var listsPermission = listPermissionUserRepository.findAllByParticipantIdAndListId(userId, listApp.getId());
             if (!listsPermission.isEmpty()) {
                 var deleteEnum = PermissionEnum.DELETE;
                 var permission = getPermissionByNameENUM.getPermissionByNameOnENUM(deleteEnum);
-                var userPermissionList = listPermissionUserRepository.findByParticipantIdAndListIdAndPermissionId(userIdUUID, listApp.getId(), permission.id());
+                var userPermissionList = listPermissionUserRepository.findByParticipantIdAndListIdAndPermissionId(userId, listApp.getId(), permission.id());
 
                 if (userPermissionList == null) {
                     throw new ValidationException(errorMessagePermission);

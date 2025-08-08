@@ -10,8 +10,8 @@ public class AuthenticateUserWithValidJwt {
     @Autowired
     private UserRepository userRepository;
 
-    public User findUserAuthenticated(String login) {
-        return (User) userRepository.findByLogin(login);
+    public User findUserAuthenticated(String email) {
+        return (User) userRepository.findByEmail(email);
     }
 
 }

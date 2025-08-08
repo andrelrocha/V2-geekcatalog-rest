@@ -1,5 +1,6 @@
 package com.geekcatalog.api.domain.gameList.useCase;
 
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.gameList.DTO.GameListBulkCreateDTO;
@@ -11,7 +12,6 @@ import com.geekcatalog.api.domain.gameList.auxService.GameListEntityExtractorSer
 import com.geekcatalog.api.domain.gameList.strategy.PermissionValidationFactory;
 import com.geekcatalog.api.domain.gameList.strategy.PermissionValidationStrategy;
 import com.geekcatalog.api.domain.permission.PermissionEnum;
-import com.geekcatalog.api.domain.user.DTO.UserReturnDTO;
 
 import java.util.ArrayList;
 
@@ -26,6 +26,7 @@ public class AddBulkGameList {
     private GameListEntityExtractorServiceImpl gameListEntityExtractorServiceImpl;
 
     public ArrayList<GameListBulkReturnDTO> addBulkGamesToList(GameListBulkCreateDTO data) {
+        /*
         var user = gameListEntityExtractorServiceImpl.extractUser(data.userId());
 
         var list = gameListEntityExtractorServiceImpl.extractList(data.listId());
@@ -54,5 +55,9 @@ public class AddBulkGameList {
         }
 
         return gameListReturnDTOs;
+
+         */
+
+        return null;
     }
 }

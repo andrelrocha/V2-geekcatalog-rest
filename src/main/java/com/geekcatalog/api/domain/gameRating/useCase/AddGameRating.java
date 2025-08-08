@@ -27,11 +27,10 @@ public class AddGameRating {
         var game = gameRepository.findById(gameIdUUID)
                 .orElseThrow(() -> new ValidationException("No game found with the provided ID during the process of adding a rating"));
 
-        var userIdUUID = UUID.fromString(data.userId());
-        var user = userRepository.findById(userIdUUID)
+        var user = userRepository.findById(data.userId())
                 .orElseThrow(() -> new ValidationException("No user found with the provided ID during the process of adding a rating"));
 
-        var ratingExists = gameRatingRepository.existsByGameIdAndUserId(gameIdUUID, userIdUUID);
+        var ratingExists = gameRatingRepository.existsByGameIdAndUserId(gameIdUUID, data.userId());
 
         GameRating gameRating;
 

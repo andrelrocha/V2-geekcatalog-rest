@@ -6,7 +6,7 @@ import com.geekcatalog.api.domain.listPermissionUser.DTO.ListPermissionUserRetur
 import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepository;
 import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.permission.PermissionRepository;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 import java.util.ArrayList;
@@ -26,23 +26,23 @@ public class GetListPermissionUserByListAndUser {
     private PermissionRepository permissionRepository;
 
     public List<ListPermissionUserReturnDTO> getAllPermissionsByUserAndListID(String tokenJWT, String listId) {
-        var participant = getUserByTokenJWT.getUserByID(tokenJWT);
-        var participantIdUUID = UUID.fromString(participant.id());
+        var participant = getUserByTokenJWT.getUserByIdClaim(tokenJWT);
+        var participantId = participant.id();
         var listIdUUID = UUID.fromString(listId);
         var list = listAppRepository.findById(listIdUUID)
                 .orElseThrow(() -> new ValidationException("No list was found for the provided ID during the permissions search."));
 
-        if (list.getUser().getId().equals(participantIdUUID)) {
+        if (list.getUser().getId().equals(participantId)) {
             var listPermission = new ArrayList<ListPermissionUserReturnDTO>();
             var permissions = permissionRepository.findAllPermissions();
             permissions.forEach(permission -> {
-                var dto = new ListPermissionUserReturnDTO(null, listIdUUID, permission.getId(), permission.getPermission(), participantIdUUID, participant.name(), participantIdUUID);
+                var dto = new ListPermissionUserReturnDTO(null, listIdUUID, permission.getId(), permission.getPermission(), participantId, participant.name(), participantId);
                 listPermission.add(dto);
             });
             return listPermission;
         }
 
-        var allPermissionsByListAndUserID = repository.findAllByParticipantIdAndListId(participantIdUUID, listIdUUID)
+        var allPermissionsByListAndUserID = repository.findAllByParticipantIdAndListId(participantId, listIdUUID)
                 .stream()
                 .map(ListPermissionUserReturnDTO::new)
                 .collect(Collectors.toList());
