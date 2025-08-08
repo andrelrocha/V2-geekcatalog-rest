@@ -1,4 +1,4 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
 import com.geekcatalog.api.domain.country.Country;
 import com.geekcatalog.api.domain.user.User;

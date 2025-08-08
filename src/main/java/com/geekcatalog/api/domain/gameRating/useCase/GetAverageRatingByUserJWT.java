@@ -5,10 +5,8 @@ import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.gameRating.DTO.GameRatingAverageDTO;
 import com.geekcatalog.api.domain.gameRating.GameRating;
 import com.geekcatalog.api.domain.gameRating.GameRatingRepository;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
-
-import java.util.UUID;
 
 @Component
 public class GetAverageRatingByUserJWT {

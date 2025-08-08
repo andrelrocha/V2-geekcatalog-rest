@@ -1,15 +1,12 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
 import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.infra.security.TokenService;
-
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor

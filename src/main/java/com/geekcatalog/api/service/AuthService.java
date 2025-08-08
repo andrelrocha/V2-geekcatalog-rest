@@ -1,6 +1,6 @@
 package com.geekcatalog.api.service;
 
-import com.geekcatalog.api.domain.user.UseCase.*;
+import com.geekcatalog.api.domain.user.useCase.*;
 import com.geekcatalog.api.dto.user.*;
 import com.geekcatalog.api.dto.utils.AuthTokensDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;

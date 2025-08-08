@@ -9,6 +9,10 @@ import com.geekcatalog.api.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UsersController {
     private final UserService service;
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+        service.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponseDTO<UserReturnDTO>> create(@RequestBody @Valid UserDTO data) {
@@ -45,9 +55,42 @@ public class UsersController {
         return ResponseEntity.ok(ApiResponseDTO.success(userPublicInfo));
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
-        service.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<ApiResponseDTO<Page<UserReturnDTO>>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "username") String sortField,
+            @RequestParam(defaultValue = "asc") String sortOrder,
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String roleId,
+            @RequestParam(required = false) String name
+    ) {
+        String fieldToSort = switch (sortField) {
+            case "username" -> "username";
+            case "email" -> "email";
+            case "name" -> "name";
+            case "role" -> "role.name";
+            default -> sortField;
+        };
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.fromString(sortOrder), fieldToSort)
+        );
+
+        var result = service.getUsersPageable(
+                pageable,
+                id,
+                email,
+                username,
+                roleId,
+                name
+        );
+
+        return ResponseEntity.ok(ApiResponseDTO.success(result));
     }
+
 }

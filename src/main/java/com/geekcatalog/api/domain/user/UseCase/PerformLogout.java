@@ -1,4 +1,4 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
 import com.geekcatalog.api.infra.security.TokenService;
 import com.geekcatalog.api.infra.utils.httpCookies.CookieManager;

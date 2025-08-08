@@ -1,16 +1,10 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
 import com.geekcatalog.api.domain.user.validation.UserValidator;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
-import com.geekcatalog.api.domain.gameList.GameListRepository;
-import com.geekcatalog.api.domain.gameRating.GameRatingRepository;
-import com.geekcatalog.api.domain.listPermissionUser.ListPermissionUserRepository;
-import com.geekcatalog.api.domain.listsApp.ListAppRepository;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 

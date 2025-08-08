@@ -1,11 +1,10 @@
-package com.geekcatalog.api.domain.user.UseCase;
+package com.geekcatalog.api.domain.user.useCase;
 
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.utils.TokenDTO;
 import com.geekcatalog.api.infra.security.TokenService;
 import com.geekcatalog.api.service.RefreshTokenLogService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

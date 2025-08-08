@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.geekcatalog.api.domain.gameRating.DTO.GameRatingByGameAndJWTDTO;
 import com.geekcatalog.api.domain.gameRating.DTO.GameRatingReturnDTO;
 import com.geekcatalog.api.domain.gameRating.GameRatingRepository;
-import com.geekcatalog.api.domain.user.UseCase.GetUserByTokenJWT;
+import com.geekcatalog.api.domain.user.useCase.GetUserByTokenJWT;
 
 import java.util.UUID;
 
