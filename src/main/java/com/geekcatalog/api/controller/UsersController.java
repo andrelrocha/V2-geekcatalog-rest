@@ -1,6 +1,7 @@
 package com.geekcatalog.api.controller;
 
 import com.geekcatalog.api.dto.user.UserDTO;
+import com.geekcatalog.api.dto.user.UserPublicReturnDTO;
 import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.dto.user.UserUpdateDTO;
 import com.geekcatalog.api.dto.utils.ApiResponseDTO;
@@ -36,5 +37,11 @@ public class UsersController {
         var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
         var user = service.getUserByJWT(tokenJWT);
         return ResponseEntity.ok(ApiResponseDTO.success(user));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponseDTO<UserPublicReturnDTO>> getUserPublicInfo(@PathVariable String userId) {
+        var userPublicInfo = service.getPublicInfoByUserId(userId);
+        return ResponseEntity.ok(ApiResponseDTO.success(userPublicInfo));
     }
 }

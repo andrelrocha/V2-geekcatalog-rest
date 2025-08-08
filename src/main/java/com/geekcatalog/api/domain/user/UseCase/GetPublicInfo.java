@@ -1,20 +1,26 @@
 package com.geekcatalog.api.domain.user.UseCase;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.geekcatalog.api.domain.user.validation.UserValidator;
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.dto.user.UserPublicReturnDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 @Component
+@RequiredArgsConstructor
 public class GetPublicInfo {
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
+    private final UserValidator validator;
 
     public UserPublicReturnDTO getPublicInfoByUserId(String userId) {
-        var user = repository.findById(userId)
-                .orElseThrow(() -> new ValidationException("No User was found for the provided ID."));
+        validator.validateUserId(userId);
 
-        return new UserPublicReturnDTO(user.getName(), user.getBirthday(), user.getCountry().getNameCommon(), user.getCountry().getId());
+        var user = repository.findById(userId)
+                .orElseThrow(() -> new ValidationException("No User was found for the provided ID, even tough its ID was just validated."));
+
+        return new UserPublicReturnDTO(user.getName(), user.getUsername(),
+                user.getBirthday(), new CountryReturnDTO(user.getCountry()));
     }
 }
