@@ -30,4 +30,11 @@ public class UsersController {
         var updatedUser = service.updateUserInfo(data, userId);
         return ResponseEntity.ok(ApiResponseDTO.success(updatedUser));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponseDTO<UserReturnDTO>> getUserByJWT(@RequestHeader("Authorization") String authorizationHeader) {
+        var tokenJWT = authorizationHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        var user = service.getUserByJWT(tokenJWT);
+        return ResponseEntity.ok(ApiResponseDTO.success(user));
+    }
 }

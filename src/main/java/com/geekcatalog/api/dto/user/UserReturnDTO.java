@@ -1,7 +1,11 @@
 package com.geekcatalog.api.dto.user;
 
+import com.geekcatalog.api.domain.country.Country;
 import com.geekcatalog.api.domain.user.User;
+import com.geekcatalog.api.domain.user.UserTheme;
 import com.geekcatalog.api.domain.userRole.UserRole;
+import com.geekcatalog.api.dto.country.CountryReturnDTO;
+import com.geekcatalog.api.dto.role.RoleReturnDTO;
 import com.geekcatalog.api.dto.userRole.UserRoleReturnDTO;
 
 import java.time.LocalDate;
@@ -15,13 +19,12 @@ public record UserReturnDTO(
         String name,
         String phone,
         LocalDate birthday,
-        String country,
         boolean refreshTokenEnabled,
         boolean twoFactorEnabled,
-        String theme,
+        UserTheme theme,
         String profilePicUrl,
-        List<String> rolesIds,
-        List<String> rolesNames
+        List<RoleReturnDTO> roles,
+        CountryReturnDTO country
 ) {
     public UserReturnDTO(User user) {
         this(
@@ -31,17 +34,16 @@ public record UserReturnDTO(
                 user.getName(),
                 user.getPhone(),
                 user.getBirthday(),
-                user.getCountry() != null ? user.getCountry().getNameCommon() : null,
                 user.isRefreshTokenEnabled(),
                 user.isTwoFactorEnabled(),
-                user.getTheme() != null ? user.getTheme().name() : null,
+                user.getTheme() != null ? user.getTheme() : null,
                 user.getProfilePicUrl(),
-                user.getUserRoles().stream().map(ur -> ur.getRole().getId()).toList(),
-                user.getUserRoles().stream().map(ur -> ur.getRole().getName()).toList()
+                user.getUserRoles().stream().map(ur -> new RoleReturnDTO(ur.getRole())).toList(),
+                user.getCountry() != null ? new CountryReturnDTO(user.getCountry()) : null
         );
     }
 
-    public UserReturnDTO(User user, List<UserRoleReturnDTO> roles) {
+    public UserReturnDTO(User user, List<UserRoleReturnDTO> userRoles) {
         this(
                 user.getId(),
                 user.getEmail(),
@@ -49,13 +51,12 @@ public record UserReturnDTO(
                 user.getName(),
                 user.getPhone(),
                 user.getBirthday(),
-                user.getCountry() != null ? user.getCountry().getNameCommon() : null,
                 user.isRefreshTokenEnabled(),
                 user.isTwoFactorEnabled(),
-                user.getTheme() != null ? user.getTheme().name() : null,
+                user.getTheme() != null ? user.getTheme() : null,
                 user.getProfilePicUrl(),
-                roles.stream().map(UserRoleReturnDTO::roleId).collect(Collectors.toList()),
-                roles.stream().map(UserRoleReturnDTO::roleName).collect(Collectors.toList())
+                userRoles.stream().map(UserRoleReturnDTO::role).toList(),
+                user.getCountry() != null ? new CountryReturnDTO(user.getCountry()) : null
         );
     }
 }
