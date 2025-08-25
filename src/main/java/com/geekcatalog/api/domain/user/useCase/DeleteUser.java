@@ -1,12 +1,12 @@
 package com.geekcatalog.api.domain.user.useCase;
 
+import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.domain.user.validation.UserValidator;
+import com.geekcatalog.api.infra.exceptions.ValidationException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
-import com.geekcatalog.api.domain.user.UserRepository;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 @Component
 @RequiredArgsConstructor

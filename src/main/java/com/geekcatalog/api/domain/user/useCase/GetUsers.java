@@ -3,11 +3,14 @@ package com.geekcatalog.api.domain.user.useCase;
 import com.geekcatalog.api.domain.user.User;
 import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.domain.user.specification.UserSpecification;
-import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.domain.userRole.UserRole;
+import com.geekcatalog.api.dto.user.UserReturnDTO;
 import com.geekcatalog.api.service.UtilsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

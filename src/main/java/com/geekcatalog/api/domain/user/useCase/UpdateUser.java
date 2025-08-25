@@ -9,7 +9,6 @@ import com.geekcatalog.api.dto.user.UserUpdateDTO;
 import com.geekcatalog.api.infra.exceptions.ValidationException;
 import com.geekcatalog.api.service.EntityHandlerService;
 import com.geekcatalog.api.service.UserRoleService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

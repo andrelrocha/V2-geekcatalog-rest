@@ -18,7 +18,7 @@ public class RateLimitingFilter implements Filter {
 
 
     public RateLimitingFilter() {
-        // Define a taxa de 100 requisições por minuto
+        // define a taxa de 100 requisições por minuto
         Bandwidth limit = Bandwidth.classic(100, Refill.greedy(100, Duration.ofMinutes(1)));
         this.bucket = Bucket.builder().addLimit(limit).build();
     }
@@ -32,7 +32,7 @@ public class RateLimitingFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             httpResponse.setStatus(429);
-            httpResponse.getWriter().write("Limit of requests exceeded. Please try again later.");
+            httpResponse.getWriter().write("Request limit exceeded. Please try again later.");
         }
     }
 

@@ -1,12 +1,12 @@
 package com.geekcatalog.api.domain.user.useCase;
 
+import com.geekcatalog.api.domain.user.UserRepository;
 import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.country.CountryReturnDTO;
+import com.geekcatalog.api.dto.user.UserPublicReturnDTO;
+import com.geekcatalog.api.infra.exceptions.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import com.geekcatalog.api.dto.user.UserPublicReturnDTO;
-import com.geekcatalog.api.domain.user.UserRepository;
-import com.geekcatalog.api.infra.exceptions.ValidationException;
 
 @Component
 @RequiredArgsConstructor
