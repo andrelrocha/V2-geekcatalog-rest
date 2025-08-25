@@ -6,6 +6,7 @@ import com.geekcatalog.api.domain.role.Role;
 import com.geekcatalog.api.domain.role.useCase.GetListRoleEntitiesByNames;
 import com.geekcatalog.api.domain.role.useCase.GetRoleEntityById;
 import com.geekcatalog.api.domain.user.User;
+import com.geekcatalog.api.domain.user.useCase.GetUserEntityById;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
