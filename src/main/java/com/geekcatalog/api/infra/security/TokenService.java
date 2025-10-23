@@ -32,7 +32,7 @@ public class TokenService {
                     .withIssuer("geekcatalog-api")
                     .withSubject(user.getEmail())
                     .withClaim("id", user.getId())
-                    .withClaim("role", user.getRoles().toString())
+                    .withClaim("roles", user.getRoles())
                     .withIssuedAt(Instant.now())
                     .withExpiresAt(accessTokenExpirationDate())
                     .sign(algorithm);
