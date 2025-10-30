@@ -90,7 +90,6 @@ public class User implements UserDetails {
 
     public User(UserDTO dto, Country country) {
         this.email = dto.email();
-        this.password = dto.password();
         this.name = dto.name();
         this.username = dto.username();
         this.phone = dto.phone();
