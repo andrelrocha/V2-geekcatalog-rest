@@ -22,7 +22,6 @@ public class ResetPassword {
     @Transactional
     public MessageResponseDTO resetPassword(UserResetPassDTO data) {
         try {
-            System.out.println("chamando no use case");
             validator.validateEmailExists(data.email());
 
             var user = repository.findByEmailToHandle(data.email());

@@ -10,6 +10,7 @@ import com.geekcatalog.api.service.EntityHandlerService;
 import com.geekcatalog.api.service.UserRoleService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class CreateUser {
     private final EntityHandlerService entityHandlerService;
     private final UserRoleService userRoleService;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Transactional
     public UserReturnDTO create(UserDTO data) {
         validator.validateSignUp(data);
@@ -29,6 +32,9 @@ public class CreateUser {
         var country = entityHandlerService.getCountryById(data.countryId());
 
         var newUser = new User(data, country);
+
+        String encodedPassword = bCryptPasswordEncoder.encode(data.password());
+        newUser.setPassword(encodedPassword);
 
         var savedUser = repository.save(newUser);
 
