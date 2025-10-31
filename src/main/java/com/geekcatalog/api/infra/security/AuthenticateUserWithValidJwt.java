@@ -11,7 +11,7 @@ public class AuthenticateUserWithValidJwt {
     private UserRepository userRepository;
 
     public User findUserAuthenticated(String login) {
-        return (User) userRepository.findByUsername(login);
+        return (User) userRepository.findByEmail(login);
     }
 
 }
