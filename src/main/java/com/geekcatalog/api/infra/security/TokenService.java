@@ -1,5 +1,6 @@
 package com.geekcatalog.api.infra.security;
 
+import com.auth0.jwt.JWTCreator;
 import com.geekcatalog.api.domain.user.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -59,6 +62,49 @@ public class TokenService {
 
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Error while generating refresh JWT token.", exception);
+        }
+    }
+
+    public String generateJwtTokenWithClaims(
+            String secret,
+            String jti,
+            String subject,
+            Instant issuedAt,
+            Instant expiration,
+            Map<String, Object> claims
+    ) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            var builder = JWT.create()
+                    .withIssuer("geekcatalog-api")
+                    .withJWTId(jti)
+                    .withSubject(subject)
+                    .withIssuedAt(issuedAt)
+                    .withExpiresAt(expiration);
+
+            if (claims != null) {
+                claims.forEach((key, value) -> addClaim(builder, key, value));
+            }
+
+            return builder.sign(algorithm);
+
+        } catch (JWTCreationException e) {
+            throw new RuntimeException("Error while generating custom JWT token with claims.", e);
+        }
+    }
+
+    private void addClaim(JWTCreator.Builder builder, String key, Object value) {
+        if (value == null) return;
+
+        switch (value) {
+            case String v -> builder.withClaim(key, v);
+            case Integer v -> builder.withClaim(key, v);
+            case Long v -> builder.withClaim(key, v);
+            case Boolean v -> builder.withClaim(key, v);
+            case Double v -> builder.withClaim(key, v);
+            case List<?> v -> builder.withClaim(key, v);
+            default -> builder.withClaim(key, value.toString());
         }
     }
 

@@ -3,36 +3,41 @@ package com.geekcatalog.api.domain.user.useCase;
 import com.geekcatalog.api.domain.user.validation.UserValidator;
 import com.geekcatalog.api.dto.user.UserOnlyEmailDTO;
 import com.geekcatalog.api.dto.utils.MessageResponseDTO;
+import com.geekcatalog.api.infra.security.HmacPasswordService;
+import com.geekcatalog.api.infra.security.TokenService;
 import com.geekcatalog.api.infra.utils.mail.*;
 import com.geekcatalog.api.dto.utils.MailDTO;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import com.geekcatalog.api.infra.exceptions.EmailSendingException;
 import com.geekcatalog.api.dto.user.UserForgotDTO;
 import com.geekcatalog.api.domain.user.UserRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ForgotPassword {
+    @Value("${api.security.hmac.password.secret}")
+    private String hmacPasswordSecret;
+
     private final UserRepository repository;
     private final UserValidator validator;
-    private final GenerateTokenForgetPassword mailToken;
     private final MailSenderMime mailSender;
+    private final TokenService tokenService;
+    private final HmacPasswordService hmacPasswordService;
 
-    @Transactional
+
     public MessageResponseDTO forgotPassword(UserOnlyEmailDTO data) {
         validator.validateEmailExists(data.email());
 
-        var token = mailToken.generateEmailToken();
-        var inOneHour = LocalDateTime.now().plusHours(1);
-        var forgotDTO = new UserForgotDTO(token, inOneHour);
-
-        var user = repository.findByEmailToHandle(data.email());
-        user.forgotPassword(forgotDTO);
+        var token = generateForgotPasswordToken(data.email());
 
         var mailDTO = getMailDTO(data.email(), token);
 
@@ -58,7 +63,7 @@ public class ForgotPassword {
         
                 Reset Token: %s
         
-                This token is valid for 1 hour and should only be used on the official platform. 
+                This token is valid for 15 minutes and should only be used on the official platform.
                 For security reasons, do not share this code with anyone. 
                 The GeekCatalog team will never ask for this token via email or any other communication method.
         
@@ -70,5 +75,34 @@ public class ForgotPassword {
 
 
         return new MailDTO(subject, email, body);
+    }
+
+    private String generateForgotPasswordToken(String email) {
+
+        var issuedAt = Instant.now();
+        var expiration = issuedAt.plusSeconds(900); // 15 minutos
+        var jti = UUID.randomUUID().toString();
+        var hmacPassword = generatePasswordHmac(email);
+
+        Map<String, Object> claims = Map.of(
+                "scope", "update:current_user:password",
+                "hmac", hmacPassword
+        );
+
+        return tokenService.generateJwtTokenWithClaims(
+                hmacPasswordSecret,
+                jti,
+                email,
+                issuedAt,
+                expiration,
+                claims
+        );
+    }
+
+    private String generatePasswordHmac(String email) {
+        var userPassword = repository.findByEmail(email).getPassword();
+        var timestamp = Instant.now().toString();
+
+        return hmacPasswordService.generateHmac(userPassword, timestamp, hmacPasswordSecret);
     }
 }
